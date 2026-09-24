@@ -688,6 +688,7 @@ const html = `<!DOCTYPE html>
                 autocomplete="name"
                 required
               >
+              <div class="field-tracer"></div>
             </div>
 
             <div class="field-group">
@@ -701,6 +702,7 @@ const html = `<!DOCTYPE html>
                 autocomplete="email"
                 required
               >
+              <div class="field-tracer"></div>
             </div>
 
             <div class="field-group">
@@ -712,6 +714,7 @@ const html = `<!DOCTYPE html>
                 name="subject"
                 placeholder="Project enquiry / Collaboration / Just saying hi"
               >
+              <div class="field-tracer"></div>
             </div>
 
             <div class="field-group">
@@ -723,6 +726,7 @@ const html = `<!DOCTYPE html>
                 placeholder="Tell me about your project or what you have in mind..."
                 required
               ></textarea>
+              <div class="field-tracer"></div>
             </div>
 
             <div>

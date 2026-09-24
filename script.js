@@ -2332,6 +2332,13 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error("Error launching Signature Motion Systems:", err);
   }
 
+  // 6.2 INITIALIZE GOD-LEVEL ANIMATION SUITE (Awwwards / FWA Standard)
+  try {
+    initGodLevelAnimationSuite();
+  } catch (err) {
+    console.error("Error launching God-Level Animation Suite:", err);
+  }
+
   // Standard cleanup on ScrollTrigger
   try {
     if (typeof ScrollTrigger !== 'undefined') {
@@ -3541,4 +3548,794 @@ function initScrollMotifStrips() {
     }
   });
 }
+
+/* ============================================================
+   15.0 GOD-LEVEL ANIMATION SUITE (Awwwards / FWA Standard)
+   Zero modification to #hero-section, zero color tampering, 100% features intact
+   ============================================================ */
+function initGodLevelAnimationSuite() {
+  console.log("⚡ God-Level Animation Suite active.");
+
+  // 1. 3D Tilt & Specular Dynamic Spotlight on Cards
+  try {
+    initGodLevel3DTiltAndSpecular();
+  } catch (e) {
+    console.error("Error in 3D Tilt & Specular:", e);
+  }
+
+  // 2. Double-Layer Magnetic Attraction System
+  try {
+    initGodLevelMagneticSystem();
+  } catch (e) {
+    console.error("Error in Magnetic System:", e);
+  }
+
+  // 3. Timeline Laser Guide Rail & Milestone Radar Pulse
+  try {
+    initGodLevelTimelineInteractions();
+  } catch (e) {
+    console.error("Error in Timeline System:", e);
+  }
+
+  // 4. Projects Showcase Interactive 3D Floating Lens & Odometer Flip
+  try {
+    initGodLevelProjectRowInteractions();
+  } catch (e) {
+    console.error("Error in Project Row System:", e);
+  }
+
+  // 5. Giant SVG Logotype Piano Wave Physics
+  try {
+    initGodLevelFooterLogotypePhysics();
+  } catch (e) {
+    console.error("Error in Logotype Physics:", e);
+  }
+
+  // 6. Confetti Particle Cannon on Copy Email
+  try {
+    initGodLevelConfettiCannon();
+  } catch (e) {
+    console.error("Error in Confetti Cannon:", e);
+  }
+
+  // 7. Kinetic Text Wave Ripple on Section Headings
+  try {
+    initGodLevelKineticTextWave();
+  } catch (e) {
+    console.error("Error in Kinetic Text Wave:", e);
+  }
+
+  // 8. Back to Top Spinner Dynamic Kinetic Flywheel
+  try {
+    initGodLevelBackToTopFlywheel();
+  } catch (e) {
+    console.error("Error in BackToTop Flywheel:", e);
+  }
+
+  // 9. Anime.js Magnetic Hover on Filter Buttons and Project Cards
+  try {
+    initAnimeMagneticHover();
+  } catch (e) {
+    console.error("Error in Anime.js Magnetic Hover:", e);
+  }
+
+  // 10. GSAP ScrollTrigger Subtle Parallax on Project List Items
+  try {
+    initProjectListParallax();
+  } catch (e) {
+    console.error("Error in Project List Parallax:", e);
+  }
+}
+
+// ── 1. 3D Tilt & Specular Dynamic Spotlight on Cards ──
+function initGodLevel3DTiltAndSpecular() {
+  if (prefersReducedMotion() || isTouchDevice()) return;
+  if (typeof gsap === 'undefined') return;
+
+  const tiltCards = document.querySelectorAll('.featured-card, .blog-card');
+  tiltCards.forEach(card => {
+    // Inject specular sheen overlay if missing
+    let sheen = card.querySelector('.specular-sheen');
+    if (!sheen) {
+      sheen = document.createElement('div');
+      sheen.className = 'specular-sheen';
+      card.appendChild(sheen);
+    }
+
+    const img = card.querySelector('img');
+
+    // Use gsap.quickTo for silky smooth 60/120fps interpolated physics
+    const rotX = gsap.quickTo(card, 'rotateX', { duration: 0.35, ease: 'power2.out' });
+    const rotY = gsap.quickTo(card, 'rotateY', { duration: 0.35, ease: 'power2.out' });
+    const imgX = img ? gsap.quickTo(img, 'x', { duration: 0.45, ease: 'power2.out' }) : null;
+    const imgY = img ? gsap.quickTo(img, 'y', { duration: 0.45, ease: 'power2.out' }) : null;
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const normX = (e.clientX - rect.left) / rect.width - 0.5;
+      const normY = (e.clientY - rect.top) / rect.height - 0.5;
+
+      rotY(normX * 12);
+      rotX(-normY * 12);
+
+      // Inner image holographic parallax counter-drift
+      if (imgX && imgY) {
+        imgX(-normX * 16);
+        imgY(-normY * 16);
+      }
+
+      // Specular spotlight coordinate
+      const pctX = ((e.clientX - rect.left) / rect.width) * 100;
+      const pctY = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', `${pctX}%`);
+      card.style.setProperty('--mouse-y', `${pctY}%`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, {
+        rotateX: 0,
+        rotateY: 0,
+        duration: 0.8,
+        ease: 'elastic.out(1, 0.4)',
+        overwrite: 'auto'
+      });
+      if (img) {
+        gsap.to(img, {
+          x: 0,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      }
+    });
+  });
+}
+
+// ── 2. Double-Layer Magnetic Attraction System ──
+function initGodLevelMagneticSystem() {
+  if (prefersReducedMotion() || isTouchDevice()) return;
+  if (typeof gsap === 'undefined') return;
+
+  const magneticTargets = document.querySelectorAll(
+    '.cta-btn, .copy-btn, .submit-btn, .nav-pill, .social-icon-link, .side-nav-dot-wrap, #foot-spinner-container, .proj-arrow, .blog-arrow, .social-item'
+  );
+
+  magneticTargets.forEach(el => {
+    if (el.dataset.godMagnetic === 'true') return;
+    el.dataset.godMagnetic = 'true';
+
+    // Find inner element for secondary parallax layer
+    const inner = el.querySelector('span, svg, a') || el.firstElementChild;
+
+    const xTo = gsap.quickTo(el, 'x', { duration: 0.3, ease: 'power2.out' });
+    const yTo = gsap.quickTo(el, 'y', { duration: 0.3, ease: 'power2.out' });
+    const innerXTo = inner ? gsap.quickTo(inner, 'x', { duration: 0.25, ease: 'power2.out' }) : null;
+    const innerYTo = inner ? gsap.quickTo(inner, 'y', { duration: 0.25, ease: 'power2.out' }) : null;
+
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const deltaX = (e.clientX - centerX) * 0.32;
+      const deltaY = (e.clientY - centerY) * 0.32;
+
+      xTo(deltaX);
+      yTo(deltaY);
+
+      if (innerXTo && innerYTo) {
+        innerXTo(deltaX * 0.45);
+        innerYTo(deltaY * 0.45);
+      }
+    });
+
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.4)', overwrite: 'auto' });
+      if (inner) {
+        gsap.to(inner, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.4)', overwrite: 'auto' });
+      }
+    });
+  });
+}
+
+// ── 3. Timeline Laser Guide Rail & Milestone Radar Pulse ──
+function initGodLevelTimelineInteractions() {
+  if (prefersReducedMotion() || typeof ScrollTrigger === 'undefined' || typeof gsap === 'undefined') return;
+
+  const timeline = document.querySelector('.timeline');
+  if (!timeline) return;
+
+  // Insert laser track and head
+  let laserTrack = timeline.querySelector('.timeline-laser-track');
+  if (!laserTrack) {
+    laserTrack = document.createElement('div');
+    laserTrack.className = 'timeline-laser-track';
+    
+    const laserHead = document.createElement('div');
+    laserHead.className = 'timeline-laser-head';
+    laserTrack.appendChild(laserHead);
+
+    timeline.appendChild(laserTrack);
+  }
+
+  // Laser fills down with scroll
+  ScrollTrigger.create({
+    trigger: timeline,
+    start: 'top 75%',
+    end: 'bottom 60%',
+    scrub: 0.2,
+    onUpdate: (self) => {
+      gsap.set(laserTrack, { scaleY: self.progress });
+    }
+  });
+
+  // Radar ring expansion on reaching each milestone
+  const items = timeline.querySelectorAll('.timeline-item');
+  items.forEach(item => {
+    ScrollTrigger.create({
+      trigger: item,
+      start: 'top 65%',
+      onEnter: () => {
+        const pulse = document.createElement('div');
+        pulse.className = 'timeline-radar-pulse';
+        pulse.style.top = `${item.offsetTop + 18}px`;
+        timeline.appendChild(pulse);
+
+        gsap.fromTo(pulse,
+          { scale: 0.8, opacity: 0.9 },
+          { scale: 3.2, opacity: 0, duration: 0.7, ease: 'power2.out', onComplete: () => pulse.remove() }
+        );
+
+        gsap.fromTo(item,
+          { x: -6 },
+          { x: 0, duration: 0.5, ease: 'back.out(2)' }
+        );
+      }
+    });
+  });
+}
+
+// ── 4. Projects Showcase Interactive 3D Floating Lens & Odometer Flip ──
+function initGodLevelProjectRowInteractions() {
+  const items = document.querySelectorAll('.project-item');
+  items.forEach(item => {
+    const numEl = item.querySelector('.proj-num');
+    if (numEl && !numEl.querySelector('.proj-num-inner')) {
+      const origNum = numEl.textContent.trim();
+      numEl.innerHTML = `
+        <span class="proj-num-inner">
+          <span>${origNum}</span>
+          <span class="proj-num-dup">${origNum}</span>
+        </span>
+      `;
+    }
+
+    const tags = item.querySelectorAll('.proj-tags span');
+    item.addEventListener('mouseenter', () => {
+      if (tags.length > 0 && typeof gsap !== 'undefined') {
+        gsap.fromTo(tags,
+          { y: 3, scale: 0.95 },
+          { y: 0, scale: 1, duration: 0.35, stagger: 0.04, ease: 'back.out(2)', overwrite: 'auto' }
+        );
+      }
+    });
+  });
+
+  // Inertial tilt on the floating project preview container
+  const preview = document.querySelector('.project-preview-container');
+  if (preview && !isTouchDevice() && !prefersReducedMotion() && typeof gsap !== 'undefined') {
+    let lastX = 0;
+    let lastY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      const deltaX = e.clientX - lastX;
+      const deltaY = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      if (parseFloat(window.getComputedStyle(preview).opacity) > 0.05) {
+        const tiltY = Math.max(-14, Math.min(14, deltaX * 0.35));
+        const tiltX = Math.max(-14, Math.min(14, -deltaY * 0.35));
+        gsap.to(preview, {
+          rotateY: tiltY,
+          rotateX: tiltX,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto'
+        });
+      }
+    });
+  }
+}
+
+// ── 5. Giant SVG Logotype Piano Wave Physics ──
+function initGodLevelFooterLogotypePhysics() {
+  const logoWrapper = document.getElementById('footer-interactive-logo');
+  if (!logoWrapper || isTouchDevice()) return;
+  if (typeof gsap === 'undefined') return;
+
+  const letters = logoWrapper.querySelectorAll('.logo-letter');
+  if (letters.length === 0) return;
+
+  const letterCoords = [
+    { el: letters[0], x: 285 },
+    { el: letters[1], x: 425 },
+    { el: letters[2], x: 565 },
+    { el: letters[3], x: 705 },
+    { el: letters[4], x: 845 },
+    { el: letters[5], x: 985 },
+    { el: letters[6], x: 1125 }
+  ];
+
+  logoWrapper.addEventListener('mousemove', (e) => {
+    const rect = logoWrapper.getBoundingClientRect();
+    const mouseSvgX = ((e.clientX - rect.left) / rect.width) * 1410;
+
+    letterCoords.forEach(item => {
+      if (!item.el) return;
+      const dist = Math.abs(mouseSvgX - item.x);
+      const radius = 240;
+
+      if (dist < radius) {
+        const factor = 1 - (dist / radius);
+        const displaceY = -Math.sin(factor * (Math.PI / 2)) * 48;
+        const scaleVal = 1 + factor * 0.18;
+        const tilt = (mouseSvgX < item.x ? 1 : -1) * factor * 7;
+
+        gsap.to(item.el, {
+          y: displaceY,
+          scale: scaleVal,
+          rotation: tilt,
+          duration: 0.2,
+          ease: 'power2.out',
+          transformOrigin: '50% 100%',
+          overwrite: 'auto'
+        });
+      } else {
+        gsap.to(item.el, {
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          duration: 0.5,
+          ease: 'elastic.out(1, 0.45)',
+          transformOrigin: '50% 100%',
+          overwrite: 'auto'
+        });
+      }
+    });
+  });
+
+  logoWrapper.addEventListener('mouseleave', () => {
+    letters.forEach((letter, i) => {
+      gsap.to(letter, {
+        y: 0,
+        scale: 1,
+        rotation: 0,
+        duration: 0.85,
+        delay: i * 0.03,
+        ease: 'elastic.out(1.2, 0.35)',
+        transformOrigin: '50% 100%',
+        overwrite: 'auto'
+      });
+    });
+  });
+}
+
+// ── 6. Confetti Particle Cannon on Copy Email ──
+function initGodLevelConfettiCannon() {
+  const copyBtn = document.getElementById('copy-email-btn');
+  if (!copyBtn) return;
+
+  copyBtn.addEventListener('click', () => {
+    if (prefersReducedMotion()) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'particle-burst-canvas';
+    document.body.appendChild(canvas);
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+
+    const rect = copyBtn.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+
+    const particles = [];
+    const colors = ['#0a0a0a', '#333333', '#777777', '#999999', '#bbbbbb'];
+    const particleCount = 42;
+
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (Math.PI * 2 * (i / particleCount)) + (Math.random() - 0.5) * 0.5;
+      const speed = Math.random() * 8 + 4;
+      particles.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        size: Math.random() * 5 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * Math.PI * 2,
+        vRot: (Math.random() - 0.5) * 0.2,
+        shape: Math.random() > 0.5 ? 'rect' : 'circle',
+        opacity: 1
+      });
+    }
+
+    let start = performance.now();
+    const duration = 1000;
+
+    function render(time) {
+      const elapsed = time - start;
+      const progress = elapsed / duration;
+
+      if (progress >= 1) {
+        canvas.remove();
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.25;
+        p.vx *= 0.98;
+        p.rotation += p.vRot;
+        p.opacity = 1 - progress;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillStyle = p.color;
+
+        if (p.shape === 'rect') {
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.6);
+        } else {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  });
+}
+
+// ── 7. Kinetic Text Wave Ripple on Section Headings ──
+function initGodLevelKineticTextWave() {
+  if (prefersReducedMotion() || isTouchDevice()) return;
+  if (typeof gsap === 'undefined') return;
+
+  const titles = document.querySelectorAll(
+    '#about .page-title, #projects .page-title, #blog-section .page-title, .section-title'
+  );
+
+  titles.forEach(title => {
+    if (title.dataset.waveReady === 'true') return;
+    title.dataset.waveReady = 'true';
+
+    const walkAndWrap = (node) => {
+      if (node.nodeType === 3) {
+        const text = node.textContent;
+        const frag = document.createDocumentFragment();
+        for (let char of text) {
+          if (char === ' ' || char === '\n' || char === '\t') {
+            frag.appendChild(document.createTextNode(char));
+          } else {
+            const wrap = document.createElement('span');
+            wrap.className = 'char-roll-wrapper';
+            const inner = document.createElement('span');
+            inner.className = 'char-roll-inner';
+            inner.textContent = char;
+            wrap.appendChild(inner);
+            frag.appendChild(wrap);
+          }
+        }
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === 1 && !node.classList.contains('char-roll-wrapper')) {
+        Array.from(node.childNodes).forEach(walkAndWrap);
+      }
+    };
+
+    walkAndWrap(title);
+
+    const chars = title.querySelectorAll('.char-roll-inner');
+    title.addEventListener('mousemove', (e) => {
+      chars.forEach(ch => {
+        const rect = ch.getBoundingClientRect();
+        const chCenterX = rect.left + rect.width / 2;
+        const dist = Math.abs(e.clientX - chCenterX);
+        if (dist < 90) {
+          const factor = 1 - (dist / 90);
+          gsap.to(ch, {
+            y: -factor * 12,
+            rotateX: factor * 15,
+            duration: 0.2,
+            ease: 'power2.out',
+            overwrite: 'auto'
+          });
+        } else {
+          gsap.to(ch, {
+            y: 0,
+            rotateX: 0,
+            duration: 0.45,
+            ease: 'elastic.out(1, 0.4)',
+            overwrite: 'auto'
+          });
+        }
+      });
+    });
+
+    title.addEventListener('mouseleave', () => {
+      gsap.to(chars, {
+        y: 0,
+        rotateX: 0,
+        duration: 0.6,
+        stagger: 0.015,
+        ease: 'elastic.out(1, 0.4)',
+        overwrite: 'auto'
+      });
+    });
+  });
+}
+
+// ── 8. Back to Top Spinner Dynamic Kinetic Flywheel ──
+function initGodLevelBackToTopFlywheel() {
+  const spinner = document.getElementById('footer-circular-text');
+  if (!spinner || typeof ScrollTrigger === 'undefined') return;
+
+  let currentRotation = 0;
+  let targetVelocity = 0;
+  let currentVelocity = 0;
+
+  ScrollTrigger.create({
+    onUpdate: (self) => {
+      const vel = Math.abs(self.getVelocity());
+      targetVelocity = vel * 0.08;
+    }
+  });
+
+  function tickFlywheel() {
+    currentVelocity += (targetVelocity - currentVelocity) * 0.1;
+    targetVelocity *= 0.92;
+
+    currentRotation += currentVelocity * 0.1;
+    if (currentVelocity > 0.02) {
+      spinner.style.transform = `rotate(${currentRotation}deg)`;
+    }
+
+    requestAnimationFrame(tickFlywheel);
+  }
+
+  tickFlywheel();
+}
+
+// ── 9. Anime.js Magnetic Hover on Filter Buttons and Project Cards ──
+function initAnimeMagneticHover() {
+  if (prefersReducedMotion() || isTouchDevice() || typeof anime === 'undefined') return;
+
+  // A. Filter Buttons: Gently follow the cursor movement with anime.js
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach(btn => {
+    let anim = null;
+
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      // Responsive and gentle magnetic follow
+      const deltaX = (e.clientX - centerX) * 0.38;
+      const deltaY = (e.clientY - centerY) * 0.38;
+
+      if (anim) anim.pause();
+      anim = anime({
+        targets: btn,
+        translateX: deltaX,
+        translateY: deltaY,
+        duration: 250,
+        easing: 'easeOutQuad'
+      });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      if (anim) anim.pause();
+      anim = anime({
+        targets: btn,
+        translateX: 0,
+        translateY: 0,
+        duration: 650,
+        easing: 'easeOutElastic(1, 0.5)'
+      });
+    });
+  });
+
+  // B. Project Cards (.featured-card): Gently follow cursor movement with anime.js
+  const projectCards = document.querySelectorAll('.featured-card');
+  projectCards.forEach(card => {
+    let cardAnim = null;
+    let imgAnim = null;
+    const img = card.querySelector('img');
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      // Gentle, tactile magnetic drift for substantial card surfaces
+      const deltaX = (e.clientX - centerX) * 0.12;
+      const deltaY = (e.clientY - centerY) * 0.12;
+
+      if (cardAnim) cardAnim.pause();
+      cardAnim = anime({
+        targets: card,
+        translateX: deltaX,
+        translateY: deltaY,
+        duration: 350,
+        easing: 'easeOutQuad'
+      });
+
+      // Internal image counter-movement for tactile dimensional depth
+      if (img) {
+        if (imgAnim) imgAnim.pause();
+        imgAnim = anime({
+          targets: img,
+          translateX: -deltaX * 0.35,
+          translateY: -deltaY * 0.35,
+          duration: 400,
+          easing: 'easeOutQuad'
+        });
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (cardAnim) cardAnim.pause();
+      cardAnim = anime({
+        targets: card,
+        translateX: 0,
+        translateY: 0,
+        duration: 800,
+        easing: 'easeOutElastic(1, 0.6)'
+      });
+
+      if (img) {
+        if (imgAnim) imgAnim.pause();
+        imgAnim = anime({
+          targets: img,
+          translateX: 0,
+          translateY: 0,
+          duration: 700,
+          easing: 'easeOutQuad'
+        });
+      }
+    });
+  });
+
+  // C. Project List Items (.project-item): Inner content gently follows cursor on hover with anime.js
+  const projectListItems = document.querySelectorAll('.project-list .project-item');
+  projectListItems.forEach(item => {
+    let itemAnim = null;
+    const innerTargets = item.querySelectorAll('.proj-num, .proj-main, .proj-right');
+
+    item.addEventListener('mousemove', (e) => {
+      const rect = item.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const deltaX = (e.clientX - centerX) * 0.12;
+      const deltaY = (e.clientY - centerY) * 0.18;
+
+      if (itemAnim) itemAnim.pause();
+      itemAnim = anime({
+        targets: innerTargets,
+        translateX: deltaX,
+        translateY: deltaY,
+        duration: 300,
+        easing: 'easeOutQuad'
+      });
+    });
+
+    item.addEventListener('mouseleave', () => {
+      if (itemAnim) itemAnim.pause();
+      itemAnim = anime({
+        targets: innerTargets,
+        translateX: 0,
+        translateY: 0,
+        duration: 650,
+        easing: 'easeOutElastic(1, 0.5)'
+      });
+    });
+  });
+}
+
+// ── 10. GSAP ScrollTrigger Subtle Parallax on Project List Items ──
+function initProjectListParallax() {
+  if (prefersReducedMotion() || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+  const projectItems = document.querySelectorAll('.project-list .project-item');
+  if (projectItems.length === 0) return;
+
+  projectItems.forEach((item, index) => {
+    // Alternating subtle parallax offsets for a sense of layered floating depth
+    const offset = (index % 2 === 0) ? -28 : -44;
+
+    gsap.fromTo(item,
+      { y: -offset * 0.4 },
+      {
+        y: offset * 0.6,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: item,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2,
+          invalidateOnRefresh: true
+        }
+      }
+    );
+
+    // Multi-plane internal parallax depth:
+    // Number and Arrow glide at distinct speeds relative to the main text row
+    const num = item.querySelector('.proj-num');
+    const right = item.querySelector('.proj-right');
+    const desc = item.querySelector('.proj-desc');
+
+    if (num) {
+      gsap.fromTo(num,
+        { y: -10 },
+        {
+          y: 12,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+            invalidateOnRefresh: true
+          }
+        }
+      );
+    }
+
+    if (right) {
+      gsap.fromTo(right,
+        { y: -8 },
+        {
+          y: 10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.1,
+            invalidateOnRefresh: true
+          }
+        }
+      );
+    }
+
+    if (desc) {
+      gsap.fromTo(desc,
+        { y: -6 },
+        {
+          y: 8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.3,
+            invalidateOnRefresh: true
+          }
+        }
+      );
+    }
+  });
+}
+
+
 

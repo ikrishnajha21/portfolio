@@ -1122,9 +1122,10 @@ body:has(#hero-section:hover) .custom-cursor {
   text-transform: uppercase;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   position: relative;
   z-index: 2;
+  will-change: transform;
 }
 
 .filter-btn:hover {
@@ -1155,10 +1156,11 @@ body:has(#hero-section:hover) .custom-cursor {
   margin: 0 -24px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+  will-change: transform;
 }
 
 .project-item:first-child { border-top: 1px solid var(--border); }
@@ -2658,6 +2660,253 @@ body.no-scroll {
   transform: none !important;
   opacity: 1 !important;
 }
+
+/* ============================================================
+   GOD-LEVEL ANIMATION SYSTEM STYLES (Zero hero touch, identical colors)
+   ============================================================ */
+
+/* ── 1. 3D Tilt & Specular Light Sheen for Cards ── */
+.featured-card, .blog-card {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  will-change: transform;
+  position: relative;
+}
+
+.specular-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 450px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.16),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+.featured-card:hover .specular-sheen,
+.blog-card:hover .specular-sheen {
+  opacity: 1;
+}
+
+.blog-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  border-color: var(--text) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+}
+
+.blog-card .blog-arrow {
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.blog-card:hover .blog-arrow {
+  transform: translate(4px, -4px) scale(1.15);
+}
+
+/* ── 2. Floating Project Preview with 3D Depth ── */
+.project-preview-container {
+  position: fixed;
+  width: 340px;
+  height: 215px;
+  border-radius: 14px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transform: scale(0.65) translateZ(0);
+  transform-origin: center center;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  will-change: transform, opacity;
+  background: #111;
+}
+
+.project-preview-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+
+/* ── 3. Kinetic 3D Character Roll Masks ── */
+.char-roll-wrapper {
+  display: inline-block;
+  perspective: 1000px;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1;
+}
+
+.char-roll-inner {
+  display: inline-block;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* ── 4. Project Item Odometer Number Flip ── */
+.proj-num {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.2em;
+  line-height: 1.2;
+}
+
+.proj-num-inner {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+}
+
+.project-item:hover .proj-num-inner {
+  transform: translateY(-100%);
+}
+
+.proj-num-dup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: inline-block;
+}
+
+/* ── 5. Timeline Laser Guide Rail & Milestones ── */
+.timeline {
+  position: relative;
+}
+
+.timeline-laser-track {
+  position: absolute;
+  left: -24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--text) 0%, rgba(10, 10, 10, 0.1) 100%);
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+  z-index: 2;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .timeline-laser-track {
+    left: -12px;
+  }
+}
+
+.timeline-laser-head {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 10px var(--text), 0 0 20px rgba(10, 10, 10, 0.3);
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.timeline-radar-pulse {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text);
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ── 6. Interactive Skill Tags Magnetic Levitation ── */
+.skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.25s ease, background-color 0.25s ease;
+  will-change: transform;
+}
+
+.skill-tag:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+
+/* ── 7. Input Field Focus Tracers ── */
+.field-group {
+  position: relative;
+}
+
+.field-tracer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 2px;
+  width: 0;
+  background: var(--text);
+  transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1), left 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.field-input:focus ~ .field-tracer,
+.field-textarea:focus ~ .field-tracer {
+  width: 100%;
+  left: 0;
+}
+
+/* ── 8. Interactive SVG Giant Logotype Piano Wave ── */
+.footer-logo-letters .logo-letter {
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+/* ── 9. Particle Canvas for Copy-to-Clipboard Burst ── */
+.particle-burst-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999999;
+}
+
+/* ── 10. Fact Row & Social Item Subtle 3D Depth ── */
+.fact-row, .social-item {
+  transition: transform 0.25s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.25s ease;
+  will-change: transform;
+}
+
+.fact-row:hover {
+  transform: translateX(8px);
+}
+
+.social-item:hover {
+  transform: translateX(8px);
+}
+
 
 
 
