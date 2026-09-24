@@ -298,40 +298,154 @@ class SplitTextReveal {
 }
 
 /* ============================================================
-   3. PREMIUM CONTEXTUAL CUSTOM CURSOR
+   3. PREMIUM CONTEXTUAL CUSTOM CURSOR & FADING DOT TRAIL
    ============================================================ */
 class Cursor {
   constructor() {
     if (isTouchDevice()) return;
+
+    // 1. Central immediate lead dot
+    this.dot = document.createElement('div');
+    this.dot.className = 'cursor-dot';
+    this.dot.id = 'cursor-lead-dot';
+    this.dot.style.opacity = '0';
+    document.body.appendChild(this.dot);
+
+    // 2. Smooth outer follower ring
     this.container = document.createElement('div');
     this.container.className = 'custom-cursor';
     this.container.id = 'premium-cursor';
+    this.container.style.opacity = '0';
     
     this.label = document.createElement('span');
     this.label.className = 'custom-cursor-label';
     this.container.appendChild(this.label);
-    
     document.body.appendChild(this.container);
-    
+
+    // 3. Fading dot trail canvas
+    this.canvas = document.createElement('canvas');
+    this.canvas.id = 'cursor-trail-canvas';
+    document.body.appendChild(this.canvas);
+    this.ctx = this.canvas.getContext('2d');
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.setupCanvas();
+
+    // Physics & coordinates
     this.pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     this.mouse = { x: this.pos.x, y: this.pos.y };
-    this.lerp = 0.32; // Snappy and ultra-responsive lag-free feel
+    this.lerp = 0.22; // Smooth, elastic follower inertia
     this.skew = 0;
     this.prevMouseX = this.mouse.x;
     
+    this.trail = [];
+    this.lastTrailX = -999;
+    this.lastTrailY = -999;
+    this.trailSpacing = 7; // Minimalist spacing in px
+    this.insideHero = false;
+    this.hasMoved = false;
+
     this.initListeners();
     this.loop();
   }
 
+  setupCanvas() {
+    if (!this.canvas || !this.ctx) return;
+    this.canvas.width = window.innerWidth * this.dpr;
+    this.canvas.height = window.innerHeight * this.dpr;
+    this.canvas.style.width = `${window.innerWidth}px`;
+    this.canvas.style.height = `${window.innerHeight}px`;
+    this.ctx.scale(this.dpr, this.dpr);
+  }
+
+  getThemeColor() {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+    if (raw.startsWith('#')) {
+      let hex = raw.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16);
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+    return { r: 10, g: 10, b: 10 };
+  }
+
+  addTrailPoint(x, y) {
+    if (prefersReducedMotion() || this.insideHero) return;
+    this.trail.push({
+      x,
+      y,
+      radius: 3.0,
+      maxLife: 26,
+      life: 26,
+      alpha: 0.36
+    });
+  }
+
   initListeners() {
-    window.addEventListener('mousemove', (e) => {
-      this.mouse.x = e.clientX;
-      this.mouse.y = e.clientY;
+    window.addEventListener('resize', () => {
+      this.setupCanvas();
     });
 
-    // Ripple effect on click
+    window.addEventListener('mousemove', (e) => {
+      this.hasMoved = true;
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+
+      // Check if mouse is currently over hero-section iframe
+      const heroSection = document.getElementById('hero-section');
+      if (heroSection) {
+        const rect = heroSection.getBoundingClientRect();
+        this.insideHero = (
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom
+        );
+      } else {
+        this.insideHero = false;
+      }
+
+      // Spawn subtle fading trail points when moving
+      if (!this.insideHero && !prefersReducedMotion()) {
+        const dist = Math.hypot(e.clientX - this.lastTrailX, e.clientY - this.lastTrailY);
+        if (dist >= this.trailSpacing) {
+          this.addTrailPoint(e.clientX, e.clientY);
+          this.lastTrailX = e.clientX;
+          this.lastTrailY = e.clientY;
+        }
+      }
+    });
+
+    // Interactive element hover detection
+    const interactiveSelector = 'a, button, input, textarea, [role="button"], .filter-btn, .featured-card, .project-item, .blog-card, .footer-spinner-wrap, .copy-btn, .side-nav-dot-wrap';
+    
+    document.addEventListener('mouseover', (e) => {
+      const target = e.target.closest(interactiveSelector);
+      if (target && !this.insideHero) {
+        this.container?.classList.add('cursor-hover');
+        this.dot?.classList.add('cursor-hover');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      const target = e.target.closest(interactiveSelector);
+      if (target) {
+        this.container?.classList.remove('cursor-hover');
+        this.dot?.classList.remove('cursor-hover');
+      }
+    });
+
+    // Click compression states
+    window.addEventListener('mousedown', () => {
+      this.container?.classList.add('cursor-click');
+    });
+
+    window.addEventListener('mouseup', () => {
+      this.container?.classList.remove('cursor-click');
+    });
+
+    // Micro-ripple effect on click
     window.addEventListener('click', (e) => {
-      if (prefersReducedMotion()) return;
+      if (prefersReducedMotion() || this.insideHero) return;
       const ripple = document.createElement('div');
       ripple.className = 'cursor-ripple';
       ripple.style.left = `${e.clientX}px`;
@@ -341,18 +455,18 @@ class Cursor {
       if (typeof gsap !== 'undefined') {
         gsap.fromTo(ripple,
           { scale: 0, opacity: 1, xPercent: -50, yPercent: -50 },
-          { scale: 3.5, opacity: 0, duration: 0.55, ease: 'power2.out', onComplete: () => ripple.remove() }
+          { scale: 3.2, opacity: 0, duration: 0.5, ease: 'power2.out', onComplete: () => ripple.remove() }
         );
       } else {
-        setTimeout(() => ripple.remove(), 550);
+        setTimeout(() => ripple.remove(), 500);
       }
     });
   }
 
   setState(state, options = {}) {
     if (!this.container) return;
-    this.container.className = 'custom-cursor'; // reset
-    this.container.style.borderStyle = 'solid'; // reset
+    this.container.className = 'custom-cursor';
+    this.container.style.borderStyle = 'solid';
     this.container.innerHTML = '';
     this.container.appendChild(this.label);
     
@@ -366,7 +480,6 @@ class Cursor {
       this.container.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M5 12l5-5M5 12l5 5M19 12l-5-5M19 12l-5 5"/></svg>`;
     } else if (state === 'rotate') {
       this.container.classList.add('rotate-active');
-      // Rotating ring around illustration
       const rotatingRing = document.createElement('div');
       rotatingRing.style.position = 'absolute';
       rotatingRing.style.inset = '-10px';
@@ -388,7 +501,14 @@ class Cursor {
 
   loop() {
     if (!this.container) return;
-    // Lerp position
+
+    // 1. Direct immediate positioning for lead dot
+    if (this.dot) {
+      this.dot.style.transform = `translate3d(${this.mouse.x}px, ${this.mouse.y}px, 0) translate(-50%, -50%)`;
+      this.dot.style.opacity = (this.insideHero || !this.hasMoved) ? '0' : '1';
+    }
+
+    // 2. Damped smooth follower positioning for outer ring
     const dx = this.mouse.x - this.pos.x;
     const dy = this.mouse.y - this.pos.y;
     this.pos.x += dx * this.lerp;
@@ -400,28 +520,35 @@ class Cursor {
     this.skew += (targetSkew - this.skew) * 0.15;
     this.prevMouseX = this.mouse.x;
 
-    // Apply translation with skew rotation and proper centering
     if (!prefersReducedMotion()) {
       this.container.style.transform = `translate3d(${this.pos.x}px, ${this.pos.y}px, 0) translate(-50%, -50%) rotate(${this.skew}deg)`;
     } else {
       this.container.style.transform = `translate3d(${this.mouse.x}px, ${this.mouse.y}px, 0) translate(-50%, -50%)`;
     }
+    this.container.style.opacity = (this.insideHero || !this.hasMoved) ? '0' : '1';
 
-    // Hide custom cursor inside the hero section for an ordinary native cursor
-    const heroSection = document.getElementById('hero-section');
-    if (heroSection) {
-      const rect = heroSection.getBoundingClientRect();
-      if (
-        this.mouse.x >= rect.left &&
-        this.mouse.x <= rect.right &&
-        this.mouse.y >= rect.top &&
-        this.mouse.y <= rect.bottom
-      ) {
-        this.container.style.opacity = '0';
-        this.container.style.pointerEvents = 'none';
-      } else {
-        this.container.style.opacity = '1';
-        this.container.style.pointerEvents = 'none';
+    // 3. Render fading dot trail
+    if (this.ctx && this.canvas) {
+      this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      if (!this.insideHero && this.trail.length > 0) {
+        const color = this.getThemeColor();
+        for (let i = this.trail.length - 1; i >= 0; i--) {
+          const p = this.trail[i];
+          p.life--;
+          if (p.life <= 0) {
+            this.trail.splice(i, 1);
+            continue;
+          }
+          const progress = p.life / p.maxLife; // 1 down to 0
+          const currentRadius = p.radius * (0.3 + 0.7 * progress);
+          const currentAlpha = p.alpha * Math.pow(progress, 1.25);
+
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, Math.max(0.4, currentRadius), 0, Math.PI * 2);
+          this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${currentAlpha.toFixed(3)})`;
+          this.ctx.fill();
+        }
       }
     }
 

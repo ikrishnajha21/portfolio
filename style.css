@@ -619,16 +619,32 @@ html.lenis {
 }
 
 /* Hide custom cursor when hovering over or interacting within the hero section */
-body:has(#hero-section:hover) .custom-cursor {
+body:has(#hero-section:hover) .custom-cursor,
+body:has(#hero-section:hover) .cursor-dot,
+body:has(#hero-section:hover) #cursor-trail-canvas {
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-/* Custom Cursor Styles */
+/* Custom Cursor Dot (Immediate follower) */
+.cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 6px; height: 6px;
+  background-color: var(--text);
+  border-radius: 50%;
+  pointer-events: none !important;
+  z-index: 10001;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  transition: opacity 0.25s ease, transform 0.15s ease-out;
+}
+
+/* Custom Cursor Ring (Smooth lagged follower) */
 .custom-cursor {
   position: fixed;
   top: 0; left: 0;
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   border: 1.5px solid var(--text);
   border-radius: 50%;
   pointer-events: none !important;
@@ -638,11 +654,41 @@ body:has(#hero-section:hover) .custom-cursor {
   align-items: center;
   justify-content: center;
   background: transparent;
-  transition: background-color 0.3s cubic-bezier(0.19, 1, 0.22, 1),
-              border-color 0.3s cubic-bezier(0.19, 1, 0.22, 1),
-              width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
-              height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              height 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              opacity 0.25s ease;
   will-change: transform;
+}
+
+/* Hover state for interactive items */
+.custom-cursor.cursor-hover {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(10, 10, 10, 0.04);
+  border-color: var(--text);
+}
+
+.cursor-dot.cursor-hover {
+  transform: translate(-50%, -50%) scale(0.65);
+}
+
+/* Click state */
+.custom-cursor.cursor-click {
+  transform: translate(-50%, -50%) scale(0.82) !important;
+}
+
+/* Subtle Fading Dot Trail Canvas */
+#cursor-trail-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none !important;
+  z-index: 9998;
+  opacity: 1;
+  transition: opacity 0.25s ease;
 }
 
 /* Custom Cursor Text (Hidden to keep constant size clean and minimal) */
