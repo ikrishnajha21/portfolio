@@ -619,32 +619,16 @@ html.lenis {
 }
 
 /* Hide custom cursor when hovering over or interacting within the hero section */
-body:has(#hero-section:hover) .custom-cursor,
-body:has(#hero-section:hover) .cursor-dot,
-body:has(#hero-section:hover) #cursor-trail-canvas {
+body:has(#hero-section:hover) .custom-cursor {
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-/* Custom Cursor Dot (Immediate follower) */
-.cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 6px; height: 6px;
-  background-color: var(--text);
-  border-radius: 50%;
-  pointer-events: none !important;
-  z-index: 10001;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  transition: opacity 0.25s ease, transform 0.15s ease-out;
-}
-
-/* Custom Cursor Ring (Smooth lagged follower) */
+/* Custom Cursor Styles */
 .custom-cursor {
   position: fixed;
   top: 0; left: 0;
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   border: 1.5px solid var(--text);
   border-radius: 50%;
   pointer-events: none !important;
@@ -654,41 +638,11 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   align-items: center;
   justify-content: center;
   background: transparent;
-  transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
-              height 0.3s cubic-bezier(0.19, 1, 0.22, 1),
-              background-color 0.3s ease,
-              border-color 0.3s ease,
-              opacity 0.25s ease;
+  transition: background-color 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              border-color 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              height 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   will-change: transform;
-}
-
-/* Hover state for interactive items */
-.custom-cursor.cursor-hover {
-  width: 48px;
-  height: 48px;
-  background-color: rgba(10, 10, 10, 0.04);
-  border-color: var(--text);
-}
-
-.cursor-dot.cursor-hover {
-  transform: translate(-50%, -50%) scale(0.65);
-}
-
-/* Click state */
-.custom-cursor.cursor-click {
-  transform: translate(-50%, -50%) scale(0.82) !important;
-}
-
-/* Subtle Fading Dot Trail Canvas */
-#cursor-trail-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none !important;
-  z-index: 9998;
-  opacity: 1;
-  transition: opacity 0.25s ease;
 }
 
 /* Custom Cursor Text (Hidden to keep constant size clean and minimal) */
@@ -1168,10 +1122,9 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   text-transform: uppercase;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: all 0.2s ease;
   position: relative;
   z-index: 2;
-  will-change: transform;
 }
 
 .filter-btn:hover {
@@ -1202,11 +1155,10 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   margin: 0 -24px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
-  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  will-change: transform;
 }
 
 .project-item:first-child { border-top: 1px solid var(--border); }
@@ -2134,7 +2086,6 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   position: relative;
   width: 100%;
   background: var(--bg);
-  will-change: transform, opacity, clip-path;
   border-top: none !important;
 }
 
@@ -2149,7 +2100,6 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   transform-origin: left center;
   overflow: hidden;
   z-index: 10;
-  will-change: transform;
 }
 
 .chapter-divider-shimmer {
@@ -2159,7 +2109,6 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
   width: 50%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-  will-change: left;
 }
 
 /* 3D Perspective Context */
@@ -2168,7 +2117,7 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
 }
 
 .featured-card, .project-item, .blog-card {
-  will-change: transform, opacity, skewY, rotateX;
+  will-change: transform;
 }
 
 /* Label mask reveal helpers */
@@ -2180,7 +2129,6 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
 
 .char-span {
   display: inline-block;
-  will-change: transform;
 }
 
 
@@ -2188,24 +2136,9 @@ body:has(#hero-section:hover) #cursor-trail-canvas {
    14.0 SIGNATURE MOTION SYSTEMS (Dumeme, Made in Evolve, Zajno)
    ============================================================ */
 
-/* --- 14.1 Chapter Wipe Shutter Overlay (Dumeme) --- */
+/* --- 14.1 Chapter Wipe Shutter Overlay (Dumeme) - Disabled for instant, glitch-free performance --- */
 .chapter-wipe {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(235, 235, 235, 0.95) 0%,
-    rgba(200, 216, 240, 0.9) 50%,
-    rgba(235, 235, 235, 0.95) 100%
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 2px solid rgba(255, 255, 255, 0.6);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
-  z-index: 99999;
-  transform: translateY(100%);
-  pointer-events: none;
-  will-change: transform;
+  display: none !important;
 }
 
 /* --- 14.2 Sticky Side Progress Navigation (Zajno) --- */
