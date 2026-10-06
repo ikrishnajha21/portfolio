@@ -1488,6 +1488,536 @@ function animateBlogSection() {
 }
 
 /* ============================================================
+   8.85 LEETCODE PROFILE & HEATMAP GRAPH SYSTEM
+   ============================================================ */
+function animateLeetCodeSection() {
+  const leetcodeSection = document.getElementById('leetcode');
+  if (!leetcodeSection) return;
+
+  // Reveal heading
+  const heading = document.querySelector('#leetcode .page-title');
+  if (heading && typeof SplitTextReveal !== 'undefined') {
+    SplitTextReveal.splitLines(heading);
+    SplitTextReveal.animateReveal(heading, 0.1);
+  }
+
+  // Stagger reveal for difficulty cards
+  const diffCards = document.querySelectorAll('.leetcode-diff-grid .diff-card');
+  if (diffCards.length > 0 && typeof gsap !== 'undefined') {
+    gsap.fromTo(diffCards,
+      { opacity: 0, y: 40, scale: 0.96 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: '.leetcode-diff-grid',
+          start: 'top 85%'
+        }
+      }
+    );
+  }
+
+  // Initialize interactive platform toggle between LeetCode & GitHub
+  initActivityPlatformToggle();
+
+  // Fetch live stats from /api/leetcode or fallback to rendered data
+  fetchLeetCodeData();
+}
+
+function fetchLeetCodeData() {
+  fetch('/api/leetcode')
+    .then(res => {
+      if (!res.ok) throw new Error('Network error fetching LeetCode stats');
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.matchedUser) {
+        updateLeetCodeUI(data);
+      }
+    })
+    .catch(err => {
+      console.warn('Using cached LeetCode data:', err);
+      // Fallback: render heatmap from default data
+      renderDefaultHeatmap();
+    });
+}
+
+function updateLeetCodeUI(data) {
+  try {
+    const user = data.matchedUser;
+    const profile = user.profile || {};
+    const submitStats = user.submitStats || {};
+    const calendar = user.userCalendar || {};
+    const recentList = data.recentAcSubmissionList || [];
+
+    // Avatar & Username
+    if (profile.userAvatar) {
+      const avatarEl = document.getElementById('leetcode-avatar');
+      if (avatarEl) avatarEl.src = profile.userAvatar;
+    }
+
+    if (profile.ranking) {
+      const rankEl = document.getElementById('leetcode-global-rank');
+      if (rankEl) rankEl.textContent = '#' + Number(profile.ranking).toLocaleString();
+    }
+
+    if (calendar.totalActiveDays) {
+      const daysEl = document.getElementById('leetcode-active-days');
+      if (daysEl) daysEl.textContent = `${calendar.totalActiveDays} Active Days`;
+    }
+
+    if (calendar.streak !== undefined) {
+      const streakValEl = document.getElementById('leetcode-streak-val');
+      if (streakValEl) streakValEl.textContent = `${calendar.streak} DAYS STREAK`;
+      const maxStreakEl = document.getElementById('stat-max-streak');
+      if (maxStreakEl) maxStreakEl.innerHTML = `${calendar.streak}<span style="font-size: 16px; font-weight: normal; margin-left: 2px;">d</span>`;
+    }
+
+    // Submission numbers
+    const acSubs = submitStats.acSubmissionNum || [];
+    let totalSolved = 0, easySolved = 0, medSolved = 0, hardSolved = 0;
+    let totalSubmissions = 0;
+
+    acSubs.forEach(item => {
+      if (item.difficulty === 'All') {
+        totalSolved = item.count;
+        totalSubmissions = item.submissions;
+      } else if (item.difficulty === 'Easy') {
+        easySolved = item.count;
+      } else if (item.difficulty === 'Medium') {
+        medSolved = item.count;
+      } else if (item.difficulty === 'Hard') {
+        hardSolved = item.count;
+      }
+    });
+
+    if (totalSolved > 0) {
+      const totalSolvedEl = document.getElementById('stat-total-solved');
+      if (totalSolvedEl) totalSolvedEl.textContent = totalSolved;
+      const easyEl = document.getElementById('stat-easy-solved');
+      if (easyEl) easyEl.textContent = easySolved;
+      const medEl = document.getElementById('stat-med-solved');
+      if (medEl) medEl.textContent = medSolved;
+      const hardEl = document.getElementById('stat-hard-solved');
+      if (hardEl) hardEl.textContent = hardSolved;
+
+      const diffEasyCount = document.getElementById('diff-easy-count');
+      if (diffEasyCount) diffEasyCount.textContent = easySolved;
+      const diffMedCount = document.getElementById('diff-med-count');
+      if (diffMedCount) diffMedCount.textContent = medSolved;
+      const diffHardCount = document.getElementById('diff-hard-count');
+      if (diffHardCount) diffHardCount.textContent = hardSolved;
+
+      const barEasy = document.getElementById('bar-easy');
+      if (barEasy) barEasy.style.width = `${Math.min(100, (easySolved / 870) * 100)}%`;
+      const barMed = document.getElementById('bar-med');
+      if (barMed) barMed.style.width = `${Math.min(100, (medSolved / 1827) * 100)}%`;
+      const barHard = document.getElementById('bar-hard');
+      if (barHard) barHard.style.width = `${Math.min(100, (hardSolved / 803) * 100)}%`;
+    }
+
+    // Render Heatmap Calendar
+    if (calendar.submissionCalendar) {
+      renderLeetCodeHeatmap(calendar.submissionCalendar);
+    } else {
+      renderDefaultHeatmap();
+    }
+
+    // Render Recent Solutions
+    if (recentList && recentList.length > 0) {
+      renderRecentSolutions(recentList);
+    }
+  } catch (err) {
+    console.error('Error updating LeetCode UI:', err);
+    renderDefaultHeatmap();
+  }
+}
+
+function renderLeetCodeHeatmap(submissionCalendarRaw) {
+  const gridContainer = document.getElementById('leetcode-heatmap-grid');
+  if (!gridContainer) return;
+  gridContainer.innerHTML = '';
+
+  let submissionMap = {};
+  if (typeof submissionCalendarRaw === 'string') {
+    try {
+      submissionMap = JSON.parse(submissionCalendarRaw);
+    } catch (e) {
+      submissionMap = {};
+    }
+  } else if (typeof submissionCalendarRaw === 'object' && submissionCalendarRaw !== null) {
+    submissionMap = submissionCalendarRaw;
+  }
+
+  // Create tooltip
+  let tooltip = document.getElementById('heatmap-tooltip');
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.id = 'heatmap-tooltip';
+    tooltip.className = 'heatmap-tooltip';
+    document.body.appendChild(tooltip);
+  }
+
+  // Calculate past 24 weeks (~168 days) ending on today
+  const today = new Date();
+  const totalWeeks = 24;
+  const daysToShow = totalWeeks * 7;
+
+  // Compute total submissions
+  let totalSubCount = 0;
+  for (const ts in submissionMap) {
+    totalSubCount += Number(submissionMap[ts]);
+  }
+  const totalSubsEl = document.getElementById('heatmap-total-subs');
+  if (totalSubsEl && totalSubCount > 0) {
+    totalSubsEl.textContent = totalSubCount;
+  }
+
+  // Build grid by columns (weeks)
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - daysToShow + 1);
+  startDate.setDate(startDate.getDate() - startDate.getDay());
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let currentCursor = new Date(startDate);
+
+  for (let w = 0; w < totalWeeks; w++) {
+    const weekCol = document.createElement('div');
+    weekCol.className = 'heatmap-week';
+
+    for (let d = 0; d < 7; d++) {
+      const dayCell = document.createElement('div');
+      dayCell.className = 'heatmap-day';
+
+      const dayUTC = Date.UTC(currentCursor.getFullYear(), currentCursor.getMonth(), currentCursor.getDate()) / 1000;
+      const count = submissionMap[dayUTC] || submissionMap[dayUTC.toString()] || 0;
+
+      let cellBg = '#e8eaed';
+      if (count >= 10) {
+        cellBg = '#216e39';
+      } else if (count >= 6) {
+        cellBg = '#30a14e';
+      } else if (count >= 3) {
+        cellBg = '#40c463';
+      } else if (count >= 1) {
+        cellBg = '#9be9a8';
+      }
+
+      dayCell.style.backgroundColor = cellBg;
+      const formattedDate = `${months[currentCursor.getMonth()]} ${currentCursor.getDate()}, ${currentCursor.getFullYear()}`;
+      const tooltipText = count > 0 
+        ? `${count} submission${count > 1 ? 's' : ''} on ${formattedDate}`
+        : `No submissions on ${formattedDate}`;
+
+      dayCell.addEventListener('mouseenter', () => {
+        tooltip.textContent = tooltipText;
+        tooltip.style.opacity = '1';
+        const rect = dayCell.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + rect.width / 2}px`;
+        tooltip.style.top = `${rect.top}px`;
+      });
+
+      dayCell.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+      });
+
+      weekCol.appendChild(dayCell);
+      currentCursor.setDate(currentCursor.getDate() + 1);
+    }
+
+    gridContainer.appendChild(weekCol);
+  }
+}
+
+function renderDefaultHeatmap() {
+  const fallbackCalendar = "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2}";
+  renderLeetCodeHeatmap(fallbackCalendar);
+}
+
+function renderRecentSolutions(list) {
+  const container = document.getElementById('leetcode-recent-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  list.slice(0, 5).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'recent-item';
+    
+    let timeAgo = 'Recently Solved';
+    if (item.timestamp) {
+      const now = Math.floor(Date.now() / 1000);
+      const diff = now - Number(item.timestamp);
+      if (diff < 3600) {
+        timeAgo = `${Math.max(1, Math.floor(diff / 60))}m ago`;
+      } else if (diff < 86400) {
+        timeAgo = `${Math.floor(diff / 3600)}h ago`;
+      } else {
+        timeAgo = `${Math.floor(diff / 86400)}d ago`;
+      }
+    }
+
+    row.innerHTML = `
+      <div class="recent-item-left">
+        <div class="recent-check-icon">✓</div>
+        <a href="https://leetcode.com/problems/${item.titleSlug}/" target="_blank" rel="noopener noreferrer" class="recent-item-title">${item.title}</a>
+      </div>
+      <span class="recent-item-time">${timeAgo}</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+/* ============================================================
+   8.86 PLATFORM TOGGLE (LEETCODE / GITHUB) & GITHUB ENGINE
+   ============================================================ */
+function initActivityPlatformToggle() {
+  const tabLeetcode = document.getElementById('tab-toggle-leetcode');
+  const tabGithub = document.getElementById('tab-toggle-github');
+  const panelLeetcode = document.getElementById('panel-leetcode');
+  const panelGithub = document.getElementById('panel-github');
+  const titleWord = document.getElementById('activity-title-word');
+
+  if (!tabLeetcode || !tabGithub) return;
+
+  function switchTab(platform) {
+    if (platform === 'leetcode') {
+      tabLeetcode.classList.add('active');
+      tabLeetcode.setAttribute('aria-selected', 'true');
+      tabGithub.classList.remove('active');
+      tabGithub.setAttribute('aria-selected', 'false');
+
+      if (panelLeetcode) panelLeetcode.classList.add('active');
+      if (panelGithub) panelGithub.classList.remove('active');
+      if (titleWord) titleWord.textContent = 'CHALLENGES';
+    } else {
+      tabGithub.classList.add('active');
+      tabGithub.setAttribute('aria-selected', 'true');
+      tabLeetcode.classList.remove('active');
+      tabLeetcode.setAttribute('aria-selected', 'false');
+
+      if (panelGithub) panelGithub.classList.add('active');
+      if (panelLeetcode) panelLeetcode.classList.remove('active');
+      if (titleWord) titleWord.textContent = 'REPOSITORIES';
+
+      // Load GitHub data if not yet fetched
+      fetchGitHubData();
+    }
+
+    if (typeof ScrollTrigger !== 'undefined') {
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    }
+  }
+
+  tabLeetcode.addEventListener('click', () => switchTab('leetcode'));
+  tabGithub.addEventListener('click', () => switchTab('github'));
+}
+
+let githubDataFetched = false;
+function fetchGitHubData() {
+  if (githubDataFetched) return;
+  fetch('/api/github')
+    .then(res => {
+      if (!res.ok) throw new Error('Network error fetching GitHub stats');
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.user) {
+        githubDataFetched = true;
+        updateGitHubUI(data);
+      }
+    })
+    .catch(err => {
+      console.warn('Error fetching GitHub live data:', err);
+    });
+}
+
+function updateGitHubUI(data) {
+  try {
+    const user = data.user || {};
+    const repos = data.repos || [];
+    const contribs = data.contributions || [];
+    const totalContribs = data.totalContributions || 86;
+
+    // Avatar
+    if (user.avatar_url) {
+      const avatarEl = document.getElementById('github-avatar');
+      if (avatarEl) avatarEl.src = user.avatar_url;
+    }
+
+    // Name / handle
+    if (user.login) {
+      const nameEl = document.getElementById('github-fullname');
+      if (nameEl) {
+        nameEl.innerHTML = `
+          ${user.login}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #0a0a0a;" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        `;
+      }
+    }
+
+    // Bio
+    if (user.bio || user.location) {
+      const bioEl = document.getElementById('github-bio');
+      if (bioEl) {
+        bioEl.textContent = `${user.bio || 'Engineering Student'} · ${user.location || 'India'}`;
+      }
+    }
+
+    // Numbers
+    if (user.public_repos !== undefined) {
+      const repoCountEl = document.getElementById('github-repo-count');
+      if (repoCountEl) repoCountEl.textContent = user.public_repos;
+    }
+
+    if (totalContribs) {
+      const contribEl = document.getElementById('github-contrib-count');
+      if (contribEl) contribEl.textContent = totalContribs;
+      const totalContribsEl = document.getElementById('github-total-contribs');
+      if (totalContribsEl) totalContribsEl.textContent = totalContribs;
+    }
+
+    if (user.followers !== undefined) {
+      const followersEl = document.getElementById('github-followers');
+      if (followersEl) followersEl.textContent = user.followers;
+    }
+
+    if (user.following !== undefined) {
+      const followingEl = document.getElementById('github-following');
+      if (followingEl) followingEl.textContent = user.following;
+    }
+
+    // Render GitHub contributions heatmap
+    if (contribs && contribs.length > 0) {
+      renderGitHubHeatmap(contribs);
+    }
+
+    // Render Repositories
+    if (repos && repos.length > 0) {
+      renderGitHubRepos(repos);
+    }
+  } catch (err) {
+    console.error('Error updating GitHub UI:', err);
+  }
+}
+
+function renderGitHubHeatmap(contribs) {
+  const gridContainer = document.getElementById('github-heatmap-grid');
+  if (!gridContainer) return;
+  gridContainer.innerHTML = '';
+
+  let tooltip = document.getElementById('heatmap-tooltip');
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.id = 'heatmap-tooltip';
+    tooltip.className = 'heatmap-tooltip';
+    document.body.appendChild(tooltip);
+  }
+
+  // Group contributions by weeks (each column 7 days)
+  // Take last 24 weeks (~168 days)
+  const sliced = contribs.slice(-168);
+  const totalWeeks = Math.ceil(sliced.length / 7);
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  for (let w = 0; w < totalWeeks; w++) {
+    const weekCol = document.createElement('div');
+    weekCol.className = 'heatmap-week';
+
+    for (let d = 0; d < 7; d++) {
+      const itemIndex = w * 7 + d;
+      if (itemIndex >= sliced.length) break;
+      const item = sliced[itemIndex];
+
+      const dayCell = document.createElement('div');
+      dayCell.className = 'heatmap-day';
+
+      const count = item.count || 0;
+      let cellBg = '#ebedf0';
+      if (count >= 10 || item.level >= 4) {
+        cellBg = '#216e39';
+      } else if (count >= 6 || item.level === 3) {
+        cellBg = '#30a14e';
+      } else if (count >= 3 || item.level === 2) {
+        cellBg = '#40c463';
+      } else if (count >= 1 || item.level === 1) {
+        cellBg = '#9be9a8';
+      }
+
+      dayCell.style.backgroundColor = cellBg;
+      
+      const dateObj = new Date(item.date);
+      const formattedDate = `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
+      const tooltipText = count > 0 
+        ? `${count} contribution${count > 1 ? 's' : ''} on ${formattedDate}`
+        : `No contributions on ${formattedDate}`;
+
+      dayCell.addEventListener('mouseenter', () => {
+        tooltip.textContent = tooltipText;
+        tooltip.style.opacity = '1';
+        const rect = dayCell.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + rect.width / 2}px`;
+        tooltip.style.top = `${rect.top}px`;
+      });
+
+      dayCell.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+      });
+
+      weekCol.appendChild(dayCell);
+    }
+
+    gridContainer.appendChild(weekCol);
+  }
+}
+
+function renderGitHubRepos(repos) {
+  const container = document.getElementById('github-repos-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const langColors = {
+    'HTML': '#e34c26',
+    'JavaScript': '#f1e05a',
+    'TypeScript': '#3178c6',
+    'CSS': '#563d7c',
+    'Python': '#3572A5'
+  };
+
+  repos.slice(0, 6).forEach(repo => {
+    const card = document.createElement('div');
+    card.className = 'github-repo-card';
+    card.onclick = () => window.open(repo.url, '_blank');
+
+    const lang = repo.language || 'Code';
+    const dotColor = langColors[lang] || '#0a0a0a';
+    const desc = repo.description || 'Public repository by Krishna Jha on GitHub.';
+
+    card.innerHTML = `
+      <div>
+        <div class="github-repo-title-row">
+          <h4 class="github-repo-name">${repo.name}</h4>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+        </div>
+        <p class="github-repo-desc">${desc}</p>
+      </div>
+      <div class="github-repo-meta">
+        <span class="github-lang-pill"><span class="lang-dot" style="background:${dotColor};"></span> ${lang}</span>
+        <span>${repo.stars > 0 ? `★ ${repo.stars}` : 'Public'}</span>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+/* ============================================================
    8.9 HERO IFRAME SCROLL TRAP FIX
    ============================================================ */
 function initHeroIframeScrollFix() {
@@ -1920,6 +2450,7 @@ function initFixedNavbarAndSmoothScroll() {
       { id: '#about', linkId: '#h-about' },
       { id: '#projects', linkId: '#h-projects' },
       { id: '#blog-section', linkId: '#h-blog' },
+      { id: '#leetcode', linkId: '#h-leetcode' },
       { id: '#contact', linkId: '#h-contact' }
     ];
 
@@ -2177,6 +2708,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateAboutPage();
     animateProjectsPage();
     animateBlogSection();
+    animateLeetCodeSection();
     animateContactPage();
     initKeyboardNavigation();
   } catch (err) {
@@ -2738,7 +3270,8 @@ function initSectionLabelReveals() {
   const sections = [
     { id: '#about', labelSel: '#about .page-label' },
     { id: '#projects', labelSel: '#projects .page-label' },
-    { id: '#blog-section', labelSel: '#blog-section .page-label' }
+    { id: '#blog-section', labelSel: '#blog-section .page-label' },
+    { id: '#leetcode', labelSel: '#leetcode .page-label' }
   ];
 
   sections.forEach(({ id, labelSel }) => {
@@ -2778,7 +3311,7 @@ function initSectionLabelReveals() {
 }
 
 function initChapterDividers() {
-  const targets = ['#about', '#projects', '#blog-section', '#contact'];
+  const targets = ['#about', '#projects', '#blog-section', '#leetcode', '#contact'];
   targets.forEach(id => {
     const el = document.querySelector(id);
     if (!el) return;
@@ -2892,8 +3425,8 @@ function initVelocityAwareEffects(isReduced, isMobile) {
   if (isReduced || isMobile) return;
 
   let proxy = { skew: 0, tilt: 0 };
-  const skewSetter = gsap.quickSetter('.project-item, .featured-card, .blog-card', 'skewY', 'deg');
-  const tiltSetter = gsap.quickSetter('.project-item, .featured-card', 'rotateX', 'deg');
+  const skewSetter = gsap.quickSetter('.project-item, .featured-card, .blog-card, .diff-card, .leetcode-header-card', 'skewY', 'deg');
+  const tiltSetter = gsap.quickSetter('.project-item, .featured-card, .diff-card', 'rotateX', 'deg');
   
   const clampSkew = gsap.utils.clamp(-2.5, 2.5); // max 2.5 degrees skew
   const clampTilt = gsap.utils.clamp(-5, 5); // max 5 degrees tilt

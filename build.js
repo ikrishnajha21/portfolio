@@ -137,6 +137,7 @@ const html = `<!DOCTYPE html>
         <a href="#about"          class="header-nav-link"          id="h-about">01 ABOUT</a>
         <a href="#projects"       class="header-nav-link"          id="h-projects">02 PROJECTS</a>
         <a href="#blog-section"   class="header-nav-link"          id="h-blog">BLOG</a>
+        <a href="#leetcode"       class="header-nav-link"          id="h-leetcode">LEETCODE</a>
         <a href="#contact"        class="header-nav-link"          id="h-contact">04 CONTACT</a>
       </nav>
 
@@ -624,6 +625,430 @@ const html = `<!DOCTYPE html>
     </section>
   </div>
 
+  <!-- ── 5. LeetCode Profile & Activity Graph Section ── -->
+  <div id="leetcode" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px;">
+    <!-- Page Hero -->
+    <section class="page-hero" aria-label="Coding Activity heading">
+      <p class="page-label reveal">Algorithmic & Open Source</p>
+      <h1 class="page-title reveal reveal-delay-1">
+        CODE<br>
+        <span id="activity-title-word">CHALLENGES</span><br>
+        & STATS
+      </h1>
+
+      <!-- Segmented Interactive Toggle -->
+      <div class="reveal reveal-delay-2" style="margin-top: 18px;">
+        <div class="activity-toggle-bar" role="tablist" aria-label="Coding platform selector">
+          <button
+            type="button"
+            class="activity-toggle-btn active"
+            id="tab-toggle-leetcode"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-leetcode"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .666-1.738l3.854-4.127 5.406-5.787a1.379 1.379 0 0 0-.969-2.316zm3.692 9.043a1.38 1.38 0 0 0-.979 2.355l4.316 4.316-4.316 4.317a1.38 1.38 0 0 0 1.952 1.951l5.293-5.292a1.38 1.38 0 0 0 0-1.952l-5.293-5.292a1.37 1.37 0 0 0-.973-.403z"/>
+            </svg>
+            <span>LEETCODE</span>
+          </button>
+          <button
+            type="button"
+            class="activity-toggle-btn"
+            id="tab-toggle-github"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-github"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span>GITHUB</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coding Activity Interactive Container -->
+    <section class="section" aria-label="Coding statistics and activity graph" style="padding-bottom: 80px;">
+      <div class="leetcode-container">
+
+        <!-- ════════ PANEL 1: LEETCODE VIEW ════════ -->
+        <div class="activity-view-panel active" id="panel-leetcode" role="tabpanel" aria-labelledby="tab-toggle-leetcode">
+          <!-- Top Profile & Summary Card -->
+          <div class="leetcode-header-card reveal">
+            <div class="leetcode-top-row">
+              <div class="leetcode-user-badge">
+                <img
+                  src="https://assets.leetcode.com/users/krishna217/avatar_1772532596.png"
+                  alt="Krishna Jha LeetCode avatar"
+                  class="leetcode-avatar-img"
+                  id="leetcode-avatar"
+                  onerror="this.src='https://leetcode.com/static/images/LeetCode_logo_rvs.png'"
+                >
+                <div class="leetcode-user-details">
+                  <h3 id="leetcode-username">
+                    krishna217
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: #ffaa00;" aria-hidden="true">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </h3>
+                  <p>
+                    <span>Global Rank: <strong id="leetcode-global-rank" style="color: var(--text);">#1,623,635</strong></span>
+                    <span>·</span>
+                    <span id="leetcode-active-days">60 Active Days</span>
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                <span class="leetcode-streak-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #ffaa00;" aria-hidden="true">
+                    <path d="M12 2c.5 2.5 2 4.5 4 6 2.5 1.9 4 4.8 4 8 0 4.4-3.6 8-8 8s-8-3.6-8-8c0-3.2 1.5-6.1 4-8 .5 1.5 2 3.5 4 4 0-3 2-6 4-10z"/>
+                  </svg>
+                  <span id="leetcode-streak-val">49 DAYS STREAK</span>
+                </span>
+                <a href="https://leetcode.com/u/krishna217/" target="_blank" rel="noopener noreferrer" class="nav-pill filled" style="height: 32px; padding: 0 16px; font-size: 11px;">
+                  VIEW ON LEETCODE
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 6px;">
+                    <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Quick Stats Numbers -->
+            <div class="leetcode-stats-overview">
+              <div class="stat-cell">
+                <span class="stat-cell-label">Problems Solved</span>
+                <span class="stat-cell-val" id="stat-total-solved">105</span>
+                <span class="stat-cell-sub">182 Submissions</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Easy</span>
+                <span class="stat-cell-val" style="color: #00b8a3;" id="stat-easy-solved">88</span>
+                <span class="stat-cell-sub">83.8% of total</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Medium</span>
+                <span class="stat-cell-val" style="color: #ffc01e;" id="stat-med-solved">16</span>
+                <span class="stat-cell-sub">15.2% of total</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Hard</span>
+                <span class="stat-cell-val" style="color: #ff375f;" id="stat-hard-solved">1</span>
+                <span class="stat-cell-sub">1.0% of total</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Max Streak</span>
+                <span class="stat-cell-val" id="stat-max-streak">49<span style="font-size: 16px; font-weight: normal; margin-left: 2px;">d</span></span>
+                <span class="stat-cell-sub">Consistent Daily</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Progress Breakdown Cards -->
+          <div class="leetcode-diff-grid">
+            <!-- Easy -->
+            <div class="diff-card reveal">
+              <div class="diff-card-header">
+                <span class="diff-name easy">EASY</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-easy-ratio">88 / 870</span>
+              </div>
+              <div class="diff-count-num" id="diff-easy-count">88</div>
+              <div class="diff-bar-track">
+                <div class="diff-bar-fill easy" id="bar-easy" style="width: 10.1%;"></div>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted);">Fundamentals, Strings, Arrays & Sorting</span>
+            </div>
+
+            <!-- Medium -->
+            <div class="diff-card reveal reveal-delay-1">
+              <div class="diff-card-header">
+                <span class="diff-name medium">MEDIUM</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-med-ratio">16 / 1827</span>
+              </div>
+              <div class="diff-count-num" id="diff-med-count">16</div>
+              <div class="diff-bar-track">
+                <div class="diff-bar-fill medium" id="bar-med" style="width: 0.9%;"></div>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted);">Hash Tables, Dynamic Programming, Greedy</span>
+            </div>
+
+            <!-- Hard -->
+            <div class="diff-card reveal reveal-delay-2">
+              <div class="diff-card-header">
+                <span class="diff-name hard">HARD</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-hard-ratio">1 / 803</span>
+              </div>
+              <div class="diff-count-num" id="diff-hard-count">1</div>
+              <div class="diff-bar-track">
+                <div class="diff-bar-fill hard" id="bar-hard" style="width: 0.2%;"></div>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted);">Complex Game Theory & Advanced Algos</span>
+            </div>
+          </div>
+
+          <!-- Interactive Heatmap Activity Graph Card -->
+          <div class="leetcode-heatmap-card reveal">
+            <div class="heatmap-card-header">
+              <div class="heatmap-title-group">
+                <h3>SUBMISSION CALENDAR GRAPH</h3>
+                <p><span id="heatmap-total-subs">220</span> submissions in the past months · Monochromatic Theme</p>
+              </div>
+              <div class="heatmap-legend">
+                <span>Less</span>
+                <div class="legend-box" style="background: #ebedf0;" title="0 submissions"></div>
+                <div class="legend-box" style="background: #9be9a8;" title="1-2 submissions"></div>
+                <div class="legend-box" style="background: #40c463;" title="3-5 submissions"></div>
+                <div class="legend-box" style="background: #30a14e;" title="6-9 submissions"></div>
+                <div class="legend-box" style="background: #216e39;" title="10+ submissions"></div>
+                <span>More</span>
+              </div>
+            </div>
+
+            <!-- Heatmap Matrix Grid -->
+            <div class="heatmap-scroll-wrapper">
+              <div class="heatmap-grid" id="leetcode-heatmap-grid">
+                <!-- Dynamically populated with accurate SVG/div day cells -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Solved Problems Card -->
+          <div class="leetcode-recent-card reveal">
+            <div class="recent-card-header">
+              <h3>RECENT ACCEPTED SOLUTIONS</h3>
+            </div>
+            <div class="recent-list" id="leetcode-recent-list">
+              <div class="recent-item">
+                <div class="recent-item-left">
+                  <div class="recent-check-icon">✓</div>
+                  <span class="recent-item-title">Remove Duplicates from Sorted Array</span>
+                </div>
+                <span class="recent-item-time">Recently Solved</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-item-left">
+                  <div class="recent-check-icon">✓</div>
+                  <span class="recent-item-title">House Robber</span>
+                </div>
+                <span class="recent-item-time">Recently Solved</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-item-left">
+                  <div class="recent-check-icon">✓</div>
+                  <span class="recent-item-title">Detect Capital</span>
+                </div>
+                <span class="recent-item-time">Recently Solved</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-item-left">
+                  <div class="recent-check-icon">✓</div>
+                  <span class="recent-item-title">Reverse Integer</span>
+                </div>
+                <span class="recent-item-time">Recently Solved</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-item-left">
+                  <div class="recent-check-icon">✓</div>
+                  <span class="recent-item-title">Max Consecutive Ones</span>
+                </div>
+                <span class="recent-item-time">Recently Solved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- View on LeetCode button -->
+          <div style="display: flex; justify-content: center; margin-top: 8px;">
+            <a href="https://leetcode.com/u/krishna217/" target="_blank" rel="noopener noreferrer" class="cta-btn" id="leetcode-view-profile">
+              VISIT LEETCODE PROFILE
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- ════════ PANEL 2: GITHUB VIEW ════════ -->
+        <div class="activity-view-panel" id="panel-github" role="tabpanel" aria-labelledby="tab-toggle-github">
+          <!-- Top GitHub Profile & Summary Card -->
+          <div class="leetcode-header-card">
+            <div class="leetcode-top-row">
+              <div class="leetcode-user-badge">
+                <img
+                  src="https://avatars.githubusercontent.com/u/252618724?v=4"
+                  alt="Krishna Jha GitHub avatar"
+                  class="leetcode-avatar-img"
+                  id="github-avatar"
+                >
+                <div class="leetcode-user-details">
+                  <h3 id="github-fullname">
+                    ikrishnajha21
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #0a0a0a;" aria-hidden="true">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                  </h3>
+                  <p>
+                    <span id="github-bio">Engineering Student · Mumbai, India</span>
+                    <span>·</span>
+                    <span>Joined 2026</span>
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                <span class="leetcode-streak-chip">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: #40c463;" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span id="github-contrib-badge">ACTIVE CONTRIBUTOR</span>
+                </span>
+                <a href="https://github.com/ikrishnajha21" target="_blank" rel="noopener noreferrer" class="nav-pill filled" style="height: 32px; padding: 0 16px; font-size: 11px;">
+                  VIEW ON GITHUB
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 6px;">
+                    <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Quick GitHub Metrics -->
+            <div class="leetcode-stats-overview">
+              <div class="stat-cell">
+                <span class="stat-cell-label">Public Repos</span>
+                <span class="stat-cell-val" id="github-repo-count">30</span>
+                <span class="stat-cell-sub">Open Source</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Contributions</span>
+                <span class="stat-cell-val" style="color: #216e39;" id="github-contrib-count">86</span>
+                <span class="stat-cell-sub">Past Year</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Followers</span>
+                <span class="stat-cell-val" id="github-followers">18</span>
+                <span class="stat-cell-sub">Developers</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Following</span>
+                <span class="stat-cell-val" id="github-following">31</span>
+                <span class="stat-cell-sub">Connections</span>
+              </div>
+              <div class="stat-cell">
+                <span class="stat-cell-label">Location</span>
+                <span class="stat-cell-val" style="font-size: 22px;">Mumbai</span>
+                <span class="stat-cell-sub">India 🇮🇳</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive GitHub Contributions Graph Card -->
+          <div class="leetcode-heatmap-card">
+            <div class="heatmap-card-header">
+              <div class="heatmap-title-group">
+                <h3>GITHUB CONTRIBUTION GRAPH</h3>
+                <p><span id="github-total-contribs">86</span> contributions in the last year · Synced from GitHub API</p>
+              </div>
+              <div class="heatmap-legend">
+                <span>Less</span>
+                <div class="legend-box" style="background: #ebedf0;" title="0 contributions"></div>
+                <div class="legend-box" style="background: #9be9a8;" title="1-2 contributions"></div>
+                <div class="legend-box" style="background: #40c463;" title="3-5 contributions"></div>
+                <div class="legend-box" style="background: #30a14e;" title="6-9 contributions"></div>
+                <div class="legend-box" style="background: #216e39;" title="10+ contributions"></div>
+                <span>More</span>
+              </div>
+            </div>
+
+            <!-- Heatmap Matrix Grid for GitHub -->
+            <div class="heatmap-scroll-wrapper">
+              <div class="heatmap-grid" id="github-heatmap-grid">
+                <!-- Dynamically populated with accurate GitHub contribution cells -->
+              </div>
+            </div>
+          </div>
+
+          <!-- GitHub Repositories Grid Card -->
+          <div class="leetcode-recent-card">
+            <div class="recent-card-header">
+              <h3>FEATURED REPOSITORIES</h3>
+            </div>
+            <div class="github-repos-grid" id="github-repos-list">
+              <!-- Dynamically populated or rendered with active GitHub repos -->
+              <div class="github-repo-card" onclick="window.open('https://github.com/ikrishnajha21/portfolio', '_blank')">
+                <div>
+                  <div class="github-repo-title-row">
+                    <h4 class="github-repo-name">portfolio</h4>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                  </div>
+                  <p class="github-repo-desc">Interactive high-performance portfolio crafted with Lenis, GSAP, and modular architecture.</p>
+                </div>
+                <div class="github-repo-meta">
+                  <span class="github-lang-pill"><span class="lang-dot" style="background:#e34c26;"></span> HTML / JS</span>
+                  <span>Public</span>
+                </div>
+              </div>
+
+              <div class="github-repo-card" onclick="window.open('https://github.com/ikrishnajha21/movie_recommendation', '_blank')">
+                <div>
+                  <div class="github-repo-title-row">
+                    <h4 class="github-repo-name">movie_recommendation</h4>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                  </div>
+                  <p class="github-repo-desc">Content-based movie recommendation system built with machine learning techniques.</p>
+                </div>
+                <div class="github-repo-meta">
+                  <span class="github-lang-pill"><span class="lang-dot" style="background:#f1e05a;"></span> JavaScript / ML</span>
+                  <span>Public</span>
+                </div>
+              </div>
+
+              <div class="github-repo-card" onclick="window.open('https://github.com/ikrishnajha21/workshop-react-pixora', '_blank')">
+                <div>
+                  <div class="github-repo-title-row">
+                    <h4 class="github-repo-name">workshop-react-pixora</h4>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                  </div>
+                  <p class="github-repo-desc">Modern interactive image styling and workshop application built with React and CSS.</p>
+                </div>
+                <div class="github-repo-meta">
+                  <span class="github-lang-pill"><span class="lang-dot" style="background:#563d7c;"></span> CSS / React</span>
+                  <span>Public</span>
+                </div>
+              </div>
+
+              <div class="github-repo-card" onclick="window.open('https://github.com/ikrishnajha21/backend', '_blank')">
+                <div>
+                  <div class="github-repo-title-row">
+                    <h4 class="github-repo-name">backend</h4>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                  </div>
+                  <p class="github-repo-desc">Scalable server-side API services and database connectivity modules.</p>
+                </div>
+                <div class="github-repo-meta">
+                  <span class="github-lang-pill"><span class="lang-dot" style="background:#3178c6;"></span> TypeScript / Node</span>
+                  <span>Public</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- View on GitHub button -->
+          <div style="display: flex; justify-content: center; margin-top: 8px;">
+            <a href="https://github.com/ikrishnajha21" target="_blank" rel="noopener noreferrer" class="cta-btn" id="github-view-profile">
+              VISIT GITHUB PROFILE
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
   <!-- Signature Scroll Motif Strip 3 — Dumeme-inspired ambient texture -->
   <div class="scroll-motif-container" id="scroll-motif-3" aria-hidden="true">
     <div class="scroll-motif-track">
@@ -632,7 +1057,7 @@ const html = `<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ── 5. Contact Section (Integrated from contact.html) ── -->
+  <!-- ── 6. Contact Section (Integrated from contact.html) ── -->
   <div id="contact" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px;">
     <!-- Page Hero -->
     <section class="page-hero" aria-label="Contact heading">
@@ -776,6 +1201,19 @@ const html = `<!DOCTYPE html>
                 id="side-linkedin"
               >
                 <span>LinkedIn</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 17l9.2-9.2M17 17V7H7"/>
+                </svg>
+              </a>
+
+              <a
+                href="https://leetcode.com/u/krishna217/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="social-item"
+                id="side-leetcode"
+              >
+                <span>LeetCode</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M7 17l9.2-9.2M17 17V7H7"/>
                 </svg>
@@ -981,8 +1419,13 @@ const html = `<!DOCTYPE html>
     <span class="side-nav-dot"></span>
     <span class="side-nav-label">Blog</span>
   </a>
-  <a href="#contact" class="side-nav-dot-wrap" data-section="05" aria-label="Go to Contact section">
+  <a href="#leetcode" class="side-nav-dot-wrap" data-section="05" aria-label="Go to LeetCode section">
     <span class="side-nav-num">05</span>
+    <span class="side-nav-dot"></span>
+    <span class="side-nav-label">LeetCode</span>
+  </a>
+  <a href="#contact" class="side-nav-dot-wrap" data-section="06" aria-label="Go to Contact section">
+    <span class="side-nav-num">06</span>
     <span class="side-nav-dot"></span>
     <span class="side-nav-label">Contact</span>
   </a>

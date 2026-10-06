@@ -2886,6 +2886,503 @@ body.no-scroll {
   transform: translateX(8px);
 }
 
+/* ============================================================
+   LEETCODE STATS & HEATMAP SECTION
+   ============================================================ */
+.leetcode-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 36px;
+  margin-bottom: 56px;
+}
+
+.leetcode-header-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leetcode-header-card:hover {
+  border-color: #0a0a0a;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 900px) {
+  .leetcode-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.leetcode-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.leetcode-avatar-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  object-fit: cover;
+}
+
+.leetcode-user-details h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leetcode-user-details p {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.leetcode-streak-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #0a0a0a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.leetcode-stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-cell-val {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.stat-cell-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Difficulty breakdown cards */
+.leetcode-diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.diff-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.diff-card:hover {
+  transform: translateY(-3px);
+  border-color: #0a0a0a;
+}
+
+.diff-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diff-name {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.diff-name.easy { color: #00b8a3; }
+.diff-name.medium { color: #ffc01e; }
+.diff-name.hard { color: #ff375f; }
+
+.diff-count-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.diff-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.diff-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.diff-bar-fill.easy { background: #00b8a3; }
+.diff-bar-fill.medium { background: #ffc01e; }
+.diff-bar-fill.hard { background: #ff375f; }
+
+/* Submission Heatmap Card */
+.leetcode-heatmap-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.leetcode-heatmap-card:hover {
+  border-color: #0a0a0a;
+}
+
+.heatmap-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.heatmap-title-group h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.heatmap-title-group p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.legend-box {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}
+
+.heatmap-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 4px;
+  min-width: 720px;
+  padding: 8px 0;
+}
+
+.heatmap-week {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heatmap-day {
+  width: 12px;
+  height: 12px;
+  border-radius: 2.5px;
+  background: #ebedf0;
+  cursor: pointer;
+  transition: transform 0.15s ease, outline 0.15s ease;
+  position: relative;
+}
+
+.heatmap-day:hover {
+  transform: scale(1.35);
+  z-index: 10;
+  outline: 1.5px solid #0a0a0a;
+}
+
+/* Custom Heatmap Tooltip */
+.heatmap-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: #0a0a0a;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translate(-50%, -130%);
+  transition: opacity 0.15s ease;
+  z-index: 10000;
+}
+
+/* Recent solved problems list */
+.leetcode-recent-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recent-card-header h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  transition: padding-left 0.2s ease, background 0.2s ease;
+}
+
+.recent-item:last-child {
+  border-bottom: none;
+}
+
+.recent-item:hover {
+  padding-left: 8px;
+}
+
+.recent-item-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recent-check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 184, 163, 0.12);
+  color: #00b8a3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.recent-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.recent-item:hover .recent-item-title {
+  color: var(--accent-red);
+}
+
+.recent-item-time {
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── Coding Activity Toggle Switcher ── */
+.activity-toggle-bar {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 4px;
+  margin-top: 18px;
+  position: relative;
+  gap: 4px;
+}
+
+.activity-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.activity-toggle-btn.active {
+  background: #0a0a0a;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.activity-toggle-btn:hover:not(.active) {
+  color: #0a0a0a;
+}
+
+.activity-view-panel {
+  display: none;
+  animation: fadeInPanel 0.35s ease forwards;
+}
+
+.activity-view-panel.active {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@keyframes fadeInPanel {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── GitHub Specific Cards & Grids ── */
+.github-repos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.github-repo-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.github-repo-card:hover {
+  transform: translateY(-3px);
+  border-color: #0a0a0a;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.08);
+}
+
+.github-repo-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.github-repo-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.github-repo-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.github-repo-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.github-lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0a0a0a;
+}
+
+
+
 
 
 

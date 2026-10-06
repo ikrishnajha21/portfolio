@@ -123,6 +123,153 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2. Handle API Route for LeetCode Stats with caching and local fallback
+  if (req.method === 'GET' && req.url.startsWith('/api/leetcode')) {
+    const https = require('https');
+    const query = `query getUserProfile($username: String!) {
+      matchedUser(username: $username) {
+        username
+        submitStats: submitStatsGlobal {
+          acSubmissionNum { difficulty count submissions }
+        }
+        profile { ranking reputation starRating userAvatar realName aboutMe }
+        userCalendar { activeYears streak totalActiveDays submissionCalendar }
+        badges { id displayName icon }
+        tagProblemCounts {
+          advanced { tagName tagSlug problemsSolved }
+          intermediate { tagName tagSlug problemsSolved }
+          fundamental { tagName tagSlug problemsSolved }
+        }
+      }
+      recentAcSubmissionList(username: $username, limit: 10) {
+        id title titleSlug timestamp
+      }
+    }`;
+
+    const postData = JSON.stringify({ query, variables: { username: 'krishna217' } });
+
+    const fallbackResponse = () => {
+      const cachePath = path.join(__dirname, 'leetcode-cache.json');
+      if (fs.existsSync(cachePath)) {
+        try {
+          const cached = fs.readFileSync(cachePath, 'utf8');
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(cached);
+          return;
+        } catch (e) {}
+      }
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to fetch LeetCode statistics' }));
+    };
+
+    const options = {
+      hostname: 'leetcode.com',
+      port: 443,
+      path: '/graphql',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Referer': 'https://leetcode.com/u/krishna217/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Content-Length': Buffer.byteLength(postData)
+      },
+      timeout: 5000
+    };
+
+    const request = https.request(options, (response) => {
+      let data = '';
+      response.on('data', chunk => data += chunk);
+      response.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed && parsed.data && parsed.data.matchedUser) {
+            // Update cache file asynchronously
+            const cachePath = path.join(__dirname, 'leetcode-cache.json');
+            fs.writeFile(cachePath, JSON.stringify(parsed.data, null, 2), () => {});
+            res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.end(JSON.stringify(parsed.data));
+            return;
+          }
+        } catch (e) {}
+        fallbackResponse();
+      });
+    });
+
+    request.on('error', () => fallbackResponse());
+    request.on('timeout', () => {
+      request.destroy();
+      fallbackResponse();
+    });
+    request.write(postData);
+    request.end();
+    return;
+  }
+
+  // 3. Handle API Route for GitHub Stats & Activity Graph with caching
+  if (req.method === 'GET' && req.url.startsWith('/api/github')) {
+    const https = require('https');
+    const fallbackResponse = () => {
+      const cachePath = path.join(__dirname, 'github-cache.json');
+      if (fs.existsSync(cachePath)) {
+        try {
+          const cached = fs.readFileSync(cachePath, 'utf8');
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(cached);
+          return;
+        } catch (e) {}
+      }
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Failed to fetch GitHub statistics' }));
+    };
+
+    const fetchJSON = (url) => {
+      return new Promise((resolve, reject) => {
+        const reqObj = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 Node.js' }, timeout: 4000 }, (resp) => {
+          let str = '';
+          resp.on('data', c => str += c);
+          resp.on('end', () => {
+            try { resolve(JSON.parse(str)); } catch(e) { resolve(null); }
+          });
+        });
+        reqObj.on('error', reject);
+        reqObj.on('timeout', () => { reqObj.destroy(); reject(new Error('timeout')); });
+      });
+    };
+
+    Promise.all([
+      fetchJSON('https://api.github.com/users/ikrishnajha21'),
+      fetchJSON('https://api.github.com/users/ikrishnajha21/repos?sort=pushed&per_page=6'),
+      fetchJSON('https://github-contributions-api.jogruber.de/v4/ikrishnajha21?y=last')
+    ]).then(([user, repos, contribs]) => {
+      if (!user || user.message) {
+        fallbackResponse();
+        return;
+      }
+      const payload = {
+        user: user || {},
+        repos: (repos || []).map(r => ({
+          name: r.name,
+          description: r.description,
+          language: r.language,
+          stars: r.stargazers_count,
+          forks: r.forks_count,
+          url: r.html_url,
+          updated_at: r.pushed_at || r.updated_at
+        })),
+        totalContributions: contribs && contribs.total ? contribs.total[new Date().getFullYear()] || contribs.total['lastYear'] || 86 : 86,
+        contributions: contribs ? contribs.contributions : []
+      };
+
+      const cachePath = path.join(__dirname, 'github-cache.json');
+      fs.writeFile(cachePath, JSON.stringify(payload, null, 2), () => {});
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify(payload));
+    }).catch(() => {
+      fallbackResponse();
+    });
+    return;
+  }
+
   // Normalize URL path to prevent directory traversal
   let filePath = req.url;
   if (filePath === '/' || filePath.split('?')[0] === '/') {

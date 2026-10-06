@@ -1,0 +1,242 @@
+{
+  "matchedUser": {
+    "username": "krishna217",
+    "submitStats": {
+      "acSubmissionNum": [
+        {
+          "difficulty": "All",
+          "count": 105,
+          "submissions": 182
+        },
+        {
+          "difficulty": "Easy",
+          "count": 88,
+          "submissions": 162
+        },
+        {
+          "difficulty": "Medium",
+          "count": 16,
+          "submissions": 19
+        },
+        {
+          "difficulty": "Hard",
+          "count": 1,
+          "submissions": 1
+        }
+      ]
+    },
+    "profile": {
+      "ranking": 1623635,
+      "reputation": 0,
+      "starRating": 1.5,
+      "userAvatar": "https://assets.leetcode.com/users/krishna217/avatar_1772532596.png",
+      "realName": "ikrishnajha21",
+      "aboutMe": ""
+    },
+    "userCalendar": {
+      "activeYears": [
+        2026
+      ],
+      "streak": 49,
+      "totalActiveDays": 60,
+      "submissionCalendar": "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2}"
+    },
+    "badges": [
+      {
+        "id": "10818239",
+        "displayName": "50 Days Badge 2026",
+        "icon": "https://assets.leetcode.com/static_assets/others/50_1080_1080.png"
+      }
+    ],
+    "tagProblemCounts": {
+      "advanced": [
+        {
+          "tagName": "Game Theory",
+          "tagSlug": "game-theory",
+          "problemsSolved": 3
+        },
+        {
+          "tagName": "Dynamic Programming",
+          "tagSlug": "dynamic-programming",
+          "problemsSolved": 8
+        },
+        {
+          "tagName": "Divide and Conquer",
+          "tagSlug": "divide-and-conquer",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Monotonic Stack",
+          "tagSlug": "monotonic-stack",
+          "problemsSolved": 1
+        }
+      ],
+      "intermediate": [
+        {
+          "tagName": "Tree",
+          "tagSlug": "tree",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Binary Tree",
+          "tagSlug": "binary-tree",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Hash Table",
+          "tagSlug": "hash-table",
+          "problemsSolved": 25
+        },
+        {
+          "tagName": "Greedy",
+          "tagSlug": "greedy",
+          "problemsSolved": 8
+        },
+        {
+          "tagName": "Binary Search",
+          "tagSlug": "binary-search",
+          "problemsSolved": 8
+        },
+        {
+          "tagName": "Depth-First Search",
+          "tagSlug": "depth-first-search",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Breadth-First Search",
+          "tagSlug": "breadth-first-search",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Recursion",
+          "tagSlug": "recursion",
+          "problemsSolved": 4
+        },
+        {
+          "tagName": "Sliding Window",
+          "tagSlug": "sliding-window",
+          "problemsSolved": 4
+        },
+        {
+          "tagName": "Bit Manipulation",
+          "tagSlug": "bit-manipulation",
+          "problemsSolved": 4
+        },
+        {
+          "tagName": "Math",
+          "tagSlug": "math",
+          "problemsSolved": 32
+        }
+      ],
+      "fundamental": [
+        {
+          "tagName": "Array",
+          "tagSlug": "array",
+          "problemsSolved": 63
+        },
+        {
+          "tagName": "Matrix",
+          "tagSlug": "matrix",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "String",
+          "tagSlug": "string",
+          "problemsSolved": 20
+        },
+        {
+          "tagName": "Simulation",
+          "tagSlug": "simulation",
+          "problemsSolved": 9
+        },
+        {
+          "tagName": "Enumeration",
+          "tagSlug": "enumeration",
+          "problemsSolved": 1
+        },
+        {
+          "tagName": "Sorting",
+          "tagSlug": "sorting",
+          "problemsSolved": 20
+        },
+        {
+          "tagName": "Stack",
+          "tagSlug": "stack",
+          "problemsSolved": 4
+        },
+        {
+          "tagName": "Linked List",
+          "tagSlug": "linked-list",
+          "problemsSolved": 4
+        },
+        {
+          "tagName": "Two Pointers",
+          "tagSlug": "two-pointers",
+          "problemsSolved": 17
+        }
+      ]
+    }
+  },
+  "recentAcSubmissionList": [
+    {
+      "id": "2162683154",
+      "title": "Remove Duplicates from Sorted Array",
+      "titleSlug": "remove-duplicates-from-sorted-array",
+      "timestamp": "1791173118"
+    },
+    {
+      "id": "2162315780",
+      "title": "House Robber",
+      "titleSlug": "house-robber",
+      "timestamp": "1791131914"
+    },
+    {
+      "id": "2162268006",
+      "title": "Detect Capital",
+      "titleSlug": "detect-capital",
+      "timestamp": "1791129089"
+    },
+    {
+      "id": "2162260855",
+      "title": "Reverse Integer",
+      "titleSlug": "reverse-integer",
+      "timestamp": "1791128625"
+    },
+    {
+      "id": "2162194351",
+      "title": "Max Consecutive Ones",
+      "titleSlug": "max-consecutive-ones",
+      "timestamp": "1791124247"
+    },
+    {
+      "id": "2162191098",
+      "title": "Set Mismatch",
+      "titleSlug": "set-mismatch",
+      "timestamp": "1791124046"
+    },
+    {
+      "id": "2161883612",
+      "title": "Shuffle the Array",
+      "titleSlug": "shuffle-the-array",
+      "timestamp": "1791100806"
+    },
+    {
+      "id": "2161176026",
+      "title": "Find the Difference of Two Arrays",
+      "titleSlug": "find-the-difference-of-two-arrays",
+      "timestamp": "1791039164"
+    },
+    {
+      "id": "2159892192",
+      "title": "Linked List Cycle",
+      "titleSlug": "linked-list-cycle",
+      "timestamp": "1790924721"
+    },
+    {
+      "id": "2159265632",
+      "title": "Truncate Sentence",
+      "titleSlug": "truncate-sentence",
+      "timestamp": "1790863781"
+    }
+  ]
+}
