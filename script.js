@@ -2051,6 +2051,7 @@ const Translations = {
     '#h-home': 'HOME',
     '#h-about': 'ABOUT',
     '#h-projects': 'PROJECTS',
+    '#h-leetcode': 'CODE',
     '#h-blog': 'BLOG',
     '#h-contact': 'CONTACT',
     '#about .page-label': 'About',
@@ -2117,6 +2118,7 @@ const Translations = {
     '#h-home': 'INICIO',
     '#h-about': 'SOBRE MÍ',
     '#h-projects': 'PROYECTOS',
+    '#h-leetcode': 'CÓDIGO',
     '#h-blog': 'BLOG',
     '#h-contact': 'CONTACTO',
     '#about .page-label': 'Acerca de',
@@ -2449,8 +2451,8 @@ function initFixedNavbarAndSmoothScroll() {
     const sections = [
       { id: '#about', linkId: '#h-about' },
       { id: '#projects', linkId: '#h-projects' },
-      { id: '#blog-section', linkId: '#h-blog' },
       { id: '#leetcode', linkId: '#h-leetcode' },
+      { id: '#blog-section', linkId: '#h-blog' },
       { id: '#contact', linkId: '#h-contact' }
     ];
 
@@ -2707,8 +2709,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initFixedNavbarAndSmoothScroll();
     animateAboutPage();
     animateProjectsPage();
-    animateBlogSection();
     animateLeetCodeSection();
+    animateBlogSection();
     animateContactPage();
     initKeyboardNavigation();
   } catch (err) {
@@ -3270,8 +3272,9 @@ function initSectionLabelReveals() {
   const sections = [
     { id: '#about', labelSel: '#about .page-label' },
     { id: '#projects', labelSel: '#projects .page-label' },
+    { id: '#leetcode', labelSel: '#leetcode .page-label' },
     { id: '#blog-section', labelSel: '#blog-section .page-label' },
-    { id: '#leetcode', labelSel: '#leetcode .page-label' }
+    { id: '#contact', labelSel: '#contact .page-label' }
   ];
 
   sections.forEach(({ id, labelSel }) => {
@@ -3311,7 +3314,7 @@ function initSectionLabelReveals() {
 }
 
 function initChapterDividers() {
-  const targets = ['#about', '#projects', '#blog-section', '#leetcode', '#contact'];
+  const targets = ['#about', '#projects', '#leetcode', '#blog-section', '#contact'];
   targets.forEach(id => {
     const el = document.querySelector(id);
     if (!el) return;
@@ -3614,8 +3617,9 @@ function initSideProgressNav() {
     { id: '#hero-section', index: 0 },
     { id: '#about', index: 1 },
     { id: '#projects', index: 2 },
-    { id: '#blog-section', index: 3 },
-    { id: '#contact', index: 4 }
+    { id: '#leetcode', index: 3 },
+    { id: '#blog-section', index: 4 },
+    { id: '#contact', index: 5 }
   ];
 
   if (typeof ScrollTrigger !== 'undefined') {

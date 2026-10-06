@@ -136,9 +136,9 @@ const html = `<!DOCTYPE html>
       <nav class="header-nav" aria-label="Page links">
         <a href="#about"          class="header-nav-link"          id="h-about">01 ABOUT</a>
         <a href="#projects"       class="header-nav-link"          id="h-projects">02 PROJECTS</a>
-        <a href="#blog-section"   class="header-nav-link"          id="h-blog">BLOG</a>
-        <a href="#leetcode"       class="header-nav-link"          id="h-leetcode">LEETCODE</a>
-        <a href="#contact"        class="header-nav-link"          id="h-contact">04 CONTACT</a>
+        <a href="#leetcode"       class="header-nav-link"          id="h-leetcode">03 CODE</a>
+        <a href="#blog-section"   class="header-nav-link"          id="h-blog">04 BLOG</a>
+        <a href="#contact"        class="header-nav-link"          id="h-contact">05 CONTACT</a>
       </nav>
 
       <nav class="nav-pills" aria-label="Social links">
@@ -540,93 +540,9 @@ const html = `<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ── 4. Blog Section (NEW section between Projects & Contact) ── -->
-  <div id="blog-section" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px;">
-    <!-- Page Hero -->
-    <section class="page-hero" aria-label="Blog heading">
-      <p class="page-label reveal">Writing</p>
-      <h1 class="page-title reveal reveal-delay-1">
-        THOUGHTS<br>
-        <span>I<span class="quote-fallback">\'</span>VE SHARED</span>
-      </h1>
-    </section>
-
-    <!-- Blog Grid -->
-    <section class="section" aria-label="Blog posts list" style="padding-bottom: 80px;">
-      <div class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; margin-top: 24px; margin-bottom: 56px;">
-        
-        <article class="blog-card reveal" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-1" onclick="window.open('https://medium.com/@jhak99797/from-senet-to-starcraft-how-ancient-games-shaped-professional-pc-gaming-8f85da6757fe?sharedUserId=jhak99797', '_blank');">
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">Ludology &bull; Esports</span>
-              <span style="font-size: 11px; color: var(--text-muted);">6 min read</span>
-            </div>
-            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">From Senet to StarCraft: How Ancient Games Shaped Professional PC Gaming</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">Tracing how ancient board games informed the strategic frameworks, cognitive loops, and design mechanics of modern competitive PC gaming.</p>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">February 2026</span>
-            <span class="blog-arrow">
-              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
-                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
-          </div>
-        </article>
-
-        <article class="blog-card reveal reveal-delay-1" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-2" onclick="window.open('https://medium.com/@jhak99797/from-vedas-to-virtual-reality-how-ancient-indian-knowledge-shaped-modern-technology-but-was-1990e2b31005?sharedUserId=jhak99797', '_blank');">
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">Philosophy &bull; Computation</span>
-              <span style="font-size: 11px; color: var(--text-muted);">8 min read</span>
-            </div>
-            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">From Vedas to VR: Ancient Indian Knowledge & Modern Tech</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">Investigating the deep mathematical foundations of Vedic knowledge and its unrecognized contributions to binary logic, linguistics, and computing.</p>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">March 2026</span>
-            <span class="blog-arrow">
-              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
-                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
-          </div>
-        </article>
-
-        <article class="blog-card reveal reveal-delay-2" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-3" onclick="window.open('https://medium.com/@jhak99797/blood-at-bronkhorstspruit-the-15-minute-massacre-that-shattered-the-british-empire-e4e8d43a86ab?sharedUserId=jhak99797', '_blank');">
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">History &bull; Empire</span>
-              <span style="font-size: 11px; color: var(--text-muted);">7 min read</span>
-            </div>
-            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">Blood at Bronkhorstspruit: The 15-Minute Massacre</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">A gripping military history analysis of the 1880 battle that triggered the First Boer War, disrupting imperial dominance in a matter of minutes.</p>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">April 2026</span>
-            <span class="blog-arrow">
-              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
-                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
-          </div>
-        </article>
-
-      </div>
-
-      <div style="display: flex; justify-content: center;">
-        <a href="https://medium.com/@jhak99797" target="_blank" rel="noopener" class="cta-btn" id="blog-view-all">
-          VIEW ALL POSTS
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
-    </section>
-  </div>
-
-  <!-- ── 5. LeetCode Profile & Activity Graph Section ── -->
-  <div id="leetcode" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px;">
+  <!-- ── 4. Coding Activity (LeetCode & GitHub) Section ── -->
+  <div id="leetcode" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px; position: relative;">
+    <span id="code" style="position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0;"></span>
     <!-- Page Hero -->
     <section class="page-hero" aria-label="Coding Activity heading">
       <p class="page-label reveal">Algorithmic & Open Source</p>
@@ -1049,6 +965,93 @@ const html = `<!DOCTYPE html>
     </section>
   </div>
 
+  <!-- ── 5. Blog Section (Thoughts I've Shared) ── -->
+  <div id="blog-section" class="page-shell scroll-section" style="border-top: 1px solid var(--border); padding-top: 60px; position: relative;">
+    <span id="blog" style="position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0;"></span>
+    <span id="thoughts" style="position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0;"></span>
+    <!-- Page Hero -->
+    <section class="page-hero" aria-label="Blog heading">
+      <p class="page-label reveal">Writing</p>
+      <h1 class="page-title reveal reveal-delay-1">
+        THOUGHTS<br>
+        <span>I<span class="quote-fallback">\'</span>VE SHARED</span>
+      </h1>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="section" aria-label="Blog posts list" style="padding-bottom: 80px;">
+      <div class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; margin-top: 24px; margin-bottom: 56px;">
+        
+        <article class="blog-card reveal" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-1" onclick="window.open('https://medium.com/@jhak99797/from-senet-to-starcraft-how-ancient-games-shaped-professional-pc-gaming-8f85da6757fe?sharedUserId=jhak99797', '_blank');">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">Ludology &bull; Esports</span>
+              <span style="font-size: 11px; color: var(--text-muted);">6 min read</span>
+            </div>
+            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">From Senet to StarCraft: How Ancient Games Shaped Professional PC Gaming</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">Tracing how ancient board games informed the strategic frameworks, cognitive loops, and design mechanics of modern competitive PC gaming.</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">February 2026</span>
+            <span class="blog-arrow">
+              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </div>
+        </article>
+
+        <article class="blog-card reveal reveal-delay-1" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-2" onclick="window.open('https://medium.com/@jhak99797/from-vedas-to-virtual-reality-how-ancient-indian-knowledge-shaped-modern-technology-but-was-1990e2b31005?sharedUserId=jhak99797', '_blank');">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">Philosophy &bull; Computation</span>
+              <span style="font-size: 11px; color: var(--text-muted);">8 min read</span>
+            </div>
+            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">From Vedas to VR: Ancient Indian Knowledge & Modern Tech</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">Investigating the deep mathematical foundations of Vedic knowledge and its unrecognized contributions to binary logic, linguistics, and computing.</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">March 2026</span>
+            <span class="blog-arrow">
+              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </div>
+        </article>
+
+        <article class="blog-card reveal reveal-delay-2" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.3s ease; height: 320px; cursor: pointer;" id="blog-3" onclick="window.open('https://medium.com/@jhak99797/blood-at-bronkhorstspruit-the-15-minute-massacre-that-shattered-the-british-empire-e4e8d43a86ab?sharedUserId=jhak99797', '_blank');">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 999px;">History &bull; Empire</span>
+              <span style="font-size: 11px; color: var(--text-muted);">7 min read</span>
+            </div>
+            <h3 class="blog-title" style="font-family: var(--font-display); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); margin-bottom: 12px; transition: color 0.2s;">Blood at Bronkhorstspruit: The 15-Minute Massacre</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">A gripping military history analysis of the 1880 battle that triggered the First Boer War, disrupting imperial dominance in a matter of minutes.</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+            <span style="font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">April 2026</span>
+            <span class="blog-arrow">
+              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </div>
+        </article>
+
+      </div>
+
+      <div style="display: flex; justify-content: center;">
+        <a href="https://medium.com/@jhak99797" target="_blank" rel="noopener" class="cta-btn" id="blog-view-all">
+          VIEW ALL POSTS
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </div>
+
   <!-- Signature Scroll Motif Strip 3 — Dumeme-inspired ambient texture -->
   <div class="scroll-motif-container" id="scroll-motif-3" aria-hidden="true">
     <div class="scroll-motif-track">
@@ -1414,15 +1417,15 @@ const html = `<!DOCTYPE html>
     <span class="side-nav-dot"></span>
     <span class="side-nav-label">Projects</span>
   </a>
-  <a href="#blog-section" class="side-nav-dot-wrap" data-section="04" aria-label="Go to Blog section">
+  <a href="#leetcode" class="side-nav-dot-wrap" data-section="04" aria-label="Go to Coding Activity section">
     <span class="side-nav-num">04</span>
     <span class="side-nav-dot"></span>
-    <span class="side-nav-label">Blog</span>
+    <span class="side-nav-label">Code</span>
   </a>
-  <a href="#leetcode" class="side-nav-dot-wrap" data-section="05" aria-label="Go to LeetCode section">
+  <a href="#blog-section" class="side-nav-dot-wrap" data-section="05" aria-label="Go to Blog section">
     <span class="side-nav-num">05</span>
     <span class="side-nav-dot"></span>
-    <span class="side-nav-label">LeetCode</span>
+    <span class="side-nav-label">Blog</span>
   </a>
   <a href="#contact" class="side-nav-dot-wrap" data-section="06" aria-label="Go to Contact section">
     <span class="side-nav-num">06</span>

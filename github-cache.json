@@ -36,6 +36,15 @@
   },
   "repos": [
     {
+      "name": "portfolio",
+      "description": "It's my  portfolio",
+      "language": "HTML",
+      "stars": 0,
+      "forks": 0,
+      "url": "https://github.com/ikrishnajha21/portfolio",
+      "updated_at": "2026-10-06T12:32:02Z"
+    },
+    {
       "name": "ikrishnajha21",
       "description": null,
       "language": null,
@@ -43,15 +52,6 @@
       "forks": 0,
       "url": "https://github.com/ikrishnajha21/ikrishnajha21",
       "updated_at": "2026-10-06T12:12:13Z"
-    },
-    {
-      "name": "portfolio",
-      "description": "It's my  portfolio",
-      "language": "HTML",
-      "stars": 0,
-      "forks": 0,
-      "url": "https://github.com/ikrishnajha21/portfolio",
-      "updated_at": "2026-09-25T16:04:50Z"
     },
     {
       "name": "movie_recommendation",
@@ -90,7 +90,7 @@
       "updated_at": "2026-09-02T09:34:24Z"
     }
   ],
-  "totalContributions": 110,
+  "totalContributions": 111,
   "contributions": [
     {
       "date": "2025-10-05",
@@ -1924,8 +1924,8 @@
     },
     {
       "date": "2026-10-06",
-      "count": 2,
-      "level": 2
+      "count": 3,
+      "level": 3
     }
   ]
 }
