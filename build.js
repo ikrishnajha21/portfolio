@@ -327,12 +327,14 @@ const html = `<!DOCTYPE html>
               src="https://framerusercontent.com/images/jn3m32cwp8FMbhBSp3AxbdjaPE4.png"
               alt="Krishna Jha portrait"
               loading="lazy"
+              onerror="this.src='assets/images/portrait.jpg'"
             >
             <div class="about-img-reveal" id="aboutImgReveal" aria-hidden="true">
               <img
                 src="https://framerusercontent.com/images/jn3m32cwp8FMbhBSp3AxbdjaPE4.png"
                 alt=""
                 loading="lazy"
+                onerror="this.src='assets/images/portrait.jpg'"
                 style="width:100%;height:100%;object-fit:cover;object-position:top center;"
               >
             </div>
@@ -410,10 +412,11 @@ const html = `<!DOCTYPE html>
 
         <article class="featured-card reveal" id="feat-1" role="article" aria-label="Project: Arogya-Flow" onclick="window.open('https://arogyaflow.ai.studio', '_blank');">
           <img
-            src="src/assets/images/arogya_flow_featured.png"
+            src="assets/images/arogya-flow-featured.jpg"
             alt="Arogya-Flow — intelligent blood bank system"
             loading="lazy"
             referrerPolicy="no-referrer"
+            onerror="this.src='src/assets/images/arogya_flow_featured.png'"
           >
           <div class="feat-arrow" aria-hidden="true">
             <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
@@ -433,9 +436,10 @@ const html = `<!DOCTYPE html>
 
         <article class="featured-card reveal reveal-delay-1" id="feat-2" role="article" aria-label="Project: Project Darkyn" onclick="window.open('https://projectdarkyn.ai.studio', '_blank');" style="cursor: pointer;">
           <img
-            src="src/assets/images/project_darkyn_featured.png"
+            src="assets/images/project-darkyn-featured.jpg"
             alt="Project Darkyn — tactical defense deck and cybersecurity intelligence suite"
             loading="lazy"
+            onerror="this.src='src/assets/images/project_darkyn_featured.png'"
           >
           <div class="feat-arrow" aria-hidden="true">
             <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">

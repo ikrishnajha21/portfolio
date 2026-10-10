@@ -287,7 +287,7 @@ const server = http.createServer((req, res) => {
   }
 
   // 2. Handle API Route for LeetCode Stats with resilient caching & live daily sync
-  if (req.method === 'GET' && req.url.startsWith('/api/leetcode')) {
+  if ((req.method === 'GET' || req.method === 'HEAD') && req.url.startsWith('/api/leetcode')) {
     const isForceFresh = req.url.includes('fresh=1');
     const now = Date.now();
     
@@ -298,6 +298,10 @@ const server = http.createServer((req, res) => {
         'Cache-Control': 'public, max-age=60',
         'X-Data-Source': source
       });
+      if (req.method === 'HEAD') {
+        res.end();
+        return;
+      }
       res.end(typeof data === 'string' ? data : JSON.stringify(data));
     };
 
@@ -333,7 +337,7 @@ const server = http.createServer((req, res) => {
   }
 
   // 3. Handle API Route for GitHub Stats & Activity Graph with multi-endpoint resilience
-  if (req.method === 'GET' && req.url.startsWith('/api/github')) {
+  if ((req.method === 'GET' || req.method === 'HEAD') && req.url.startsWith('/api/github')) {
     const isForceFresh = req.url.includes('fresh=1');
     const now = Date.now();
 
@@ -344,6 +348,10 @@ const server = http.createServer((req, res) => {
         'Cache-Control': 'public, max-age=60',
         'X-Data-Source': source
       });
+      if (req.method === 'HEAD') {
+        res.end();
+        return;
+      }
       res.end(typeof data === 'string' ? data : JSON.stringify(data));
     };
 
@@ -384,24 +392,47 @@ const server = http.createServer((req, res) => {
     filePath = filePath.split('?')[0]; // strip query string
   }
 
-  // Resolve to project workspace
-  const fullPath = path.join(__dirname, filePath);
+  // Resolve to project workspace with directory traversal protection
+  const safeRelPath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+  let fullPath = path.join(__dirname, safeRelPath);
 
-  // Check if file exists and is not a directory
+  const serveFile = (targetPath) => {
+    const ext = path.extname(targetPath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    res.writeHead(200, {
+      'Content-Type': contentType,
+      'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=86400'
+    });
+    fs.createReadStream(targetPath).pipe(res);
+  };
+
   fs.stat(fullPath, (err, stats) => {
-    if (err || !stats.isFile()) {
-      // 404 page if not found
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
+    if (!err && stats.isFile()) {
+      serveFile(fullPath);
       return;
     }
 
-    const ext = path.extname(fullPath).toLowerCase();
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    // Asset alias fallback: check assets/images/
+    const baseName = path.basename(safeRelPath);
+    const assetCandidate = path.join(__dirname, 'assets', 'images', baseName);
+    fs.stat(assetCandidate, (aErr, aStats) => {
+      if (!aErr && aStats.isFile()) {
+        serveFile(assetCandidate);
+        return;
+      }
 
-    res.writeHead(200, { 'Content-Type': contentType });
-    const stream = fs.createReadStream(fullPath);
-    stream.pipe(res);
+      // Check src/assets/images/ fallback
+      const srcCandidate = path.join(__dirname, 'src', 'assets', 'images', baseName);
+      fs.stat(srcCandidate, (sErr, sStats) => {
+        if (!sErr && sStats.isFile()) {
+          serveFile(srcCandidate);
+          return;
+        }
+
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+      });
+    });
   });
 });
 

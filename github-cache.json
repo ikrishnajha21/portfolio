@@ -36,6 +36,15 @@
   },
   "repos": [
     {
+      "name": "portfolio",
+      "description": "It's my  portfolio",
+      "language": "HTML",
+      "stars": 0,
+      "forks": 0,
+      "url": "https://github.com/ikrishnajha21/portfolio",
+      "updated_at": "2026-10-10T06:05:40Z"
+    },
+    {
       "name": "ikrishnajha21",
       "description": null,
       "language": null,
@@ -52,15 +61,6 @@
       "forks": 0,
       "url": "https://github.com/ikrishnajha21/chatbot",
       "updated_at": "2026-10-08T11:54:02Z"
-    },
-    {
-      "name": "portfolio",
-      "description": "It's my  portfolio",
-      "language": "HTML",
-      "stars": 0,
-      "forks": 0,
-      "url": "https://github.com/ikrishnajha21/portfolio",
-      "updated_at": "2026-10-06T15:02:43Z"
     },
     {
       "name": "movie_recommendation",
@@ -1948,5 +1948,5 @@
       "level": 0
     }
   ],
-  "lastUpdated": "2026-10-10T05:56:31.286Z"
+  "lastUpdated": "2026-10-10T06:21:52.935Z"
 }
