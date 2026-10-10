@@ -27,23 +27,14 @@
     "hireable": null,
     "bio": "Enginnering Student",
     "twitter_username": null,
-    "public_repos": 30,
+    "public_repos": 31,
     "public_gists": 0,
     "followers": 18,
-    "following": 31,
+    "following": 33,
     "created_at": "2026-01-02T16:19:29Z",
     "updated_at": "2026-09-28T04:04:44Z"
   },
   "repos": [
-    {
-      "name": "portfolio",
-      "description": "It's my  portfolio",
-      "language": "HTML",
-      "stars": 0,
-      "forks": 0,
-      "url": "https://github.com/ikrishnajha21/portfolio",
-      "updated_at": "2026-10-06T12:32:02Z"
-    },
     {
       "name": "ikrishnajha21",
       "description": null,
@@ -51,7 +42,25 @@
       "stars": 0,
       "forks": 0,
       "url": "https://github.com/ikrishnajha21/ikrishnajha21",
-      "updated_at": "2026-10-06T12:12:13Z"
+      "updated_at": "2026-10-09T14:51:38Z"
+    },
+    {
+      "name": "chatbot",
+      "description": null,
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "url": "https://github.com/ikrishnajha21/chatbot",
+      "updated_at": "2026-10-08T11:54:02Z"
+    },
+    {
+      "name": "portfolio",
+      "description": "It's my  portfolio",
+      "language": "HTML",
+      "stars": 0,
+      "forks": 0,
+      "url": "https://github.com/ikrishnajha21/portfolio",
+      "updated_at": "2026-10-06T15:02:43Z"
     },
     {
       "name": "movie_recommendation",
@@ -79,18 +88,9 @@
       "forks": 0,
       "url": "https://github.com/ikrishnajha21/project_b",
       "updated_at": "2026-09-18T03:46:36Z"
-    },
-    {
-      "name": "githubbbbbbb",
-      "description": null,
-      "language": null,
-      "stars": 0,
-      "forks": 0,
-      "url": "https://github.com/ikrishnajha21/githubbbbbbb",
-      "updated_at": "2026-09-02T09:34:24Z"
     }
   ],
-  "totalContributions": 111,
+  "totalContributions": 115,
   "contributions": [
     {
       "date": "2025-10-05",
@@ -1924,8 +1924,29 @@
     },
     {
       "date": "2026-10-06",
-      "count": 3,
-      "level": 3
+      "count": 4,
+      "level": 4
+    },
+    {
+      "date": "2026-10-07",
+      "count": 0,
+      "level": 0
+    },
+    {
+      "date": "2026-10-08",
+      "count": 2,
+      "level": 2
+    },
+    {
+      "date": "2026-10-09",
+      "count": 1,
+      "level": 1
+    },
+    {
+      "date": "2026-10-10",
+      "count": 0,
+      "level": 0
     }
-  ]
+  ],
+  "lastUpdated": "2026-10-10T05:56:31.286Z"
 }

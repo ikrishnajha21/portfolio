@@ -1,4 +1,92 @@
 const fs = require('fs');
+const path = require('path');
+
+let lc = {};
+try { lc = JSON.parse(fs.readFileSync('./leetcode-cache.json', 'utf8')); } catch (e) {}
+
+let gh = {};
+try { gh = JSON.parse(fs.readFileSync('./github-cache.json', 'utf8')); } catch (e) {}
+
+const lcUser = lc.matchedUser || {};
+const lcSubmitStats = lcUser.submitStats || {};
+const lcCalendar = lcUser.userCalendar || {};
+const lcAcSubs = lcSubmitStats.acSubmissionNum || [];
+
+let lcTotalSolved = 113, lcEasy = 91, lcMed = 21, lcHard = 1, lcSubmissions = 200;
+lcAcSubs.forEach(item => {
+  if (item.difficulty === 'All') {
+    lcTotalSolved = item.count;
+    lcSubmissions = item.submissions;
+  } else if (item.difficulty === 'Easy') lcEasy = item.count;
+  else if (item.difficulty === 'Medium') lcMed = item.count;
+  else if (item.difficulty === 'Hard') lcHard = item.count;
+});
+
+const lcStreak = lcCalendar.streak || 53;
+const lcActiveDays = lcCalendar.totalActiveDays || 64;
+
+const ghUser = gh.user || {};
+const ghPublicRepos = ghUser.public_repos || 31;
+const ghTotalContribs = gh.totalContributions || 115;
+const ghFollowers = ghUser.followers || 18;
+const ghFollowing = ghUser.following || 31;
+
+function generateHeatmapHTML(type, data) {
+  const today = new Date();
+  const currentDayOfWeek = today.getDay();
+  const endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() + (6 - currentDayOfWeek));
+  endOfWeek.setHours(23, 59, 59, 999);
+  
+  const totalWeeks = 24;
+  const totalDays = totalWeeks * 7;
+  const startDate = new Date(endOfWeek);
+  startDate.setDate(endOfWeek.getDate() - totalDays + 1);
+  startDate.setHours(0, 0, 0, 0);
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const todayYMD = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  const dateMap = {};
+  if (type === 'leetcode') {
+    const subCal = JSON.parse(data?.matchedUser?.userCalendar?.submissionCalendar || '{}');
+    for (const ts in subCal) {
+      const d = new Date(Number(ts) * 1000);
+      const ymd = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+      dateMap[ymd] = Number(subCal[ts]);
+    }
+  } else {
+    (data?.contributions || []).forEach(c => {
+      if (c && c.date) dateMap[c.date] = c;
+    });
+  }
+
+  let html = '';
+  let cur = new Date(startDate);
+  for (let w = 0; w < totalWeeks; w++) {
+    html += '<div class="heatmap-week">';
+    for (let d = 0; d < 7; d++) {
+      const ymd = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, '0')}-${String(cur.getDate()).padStart(2, '0')}`;
+      const isToday = ymd === todayYMD;
+      const count = type === 'leetcode' ? (dateMap[ymd] || 0) : (dateMap[ymd]?.count || 0);
+      let bg = '#ebedf0';
+      if (count >= 10) bg = '#216e39';
+      else if (count >= 6) bg = '#30a14e';
+      else if (count >= 3) bg = '#40c463';
+      else if (count >= 1) bg = '#9be9a8';
+
+      const formatted = `${months[cur.getMonth()]} ${cur.getDate()}, ${cur.getFullYear()}`;
+      const title = count > 0 ? `${count} submission${count > 1 ? 's' : ''} on ${formatted}${isToday ? ' (Today)' : ''}` : `No submissions on ${formatted}${isToday ? ' (Today)' : ''}`;
+      html += `<div class="heatmap-day${isToday ? ' today-cell' : ''}" style="background-color: ${bg};" data-date="${ymd}" title="${title}"></div>`;
+      cur.setDate(cur.getDate() + 1);
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+const lcHeatmapHTML = generateHeatmapHTML('leetcode', lc);
+const ghHeatmapHTML = generateHeatmapHTML('github', gh);
 
 const html = `<!DOCTYPE html>
 <html lang="en">
@@ -552,8 +640,8 @@ const html = `<!DOCTYPE html>
         & STATS
       </h1>
 
-      <!-- Segmented Interactive Toggle -->
-      <div class="reveal reveal-delay-2" style="margin-top: 18px;">
+      <!-- Segmented Interactive Toggle & Live Refresh Bar -->
+      <div class="reveal reveal-delay-2" style="margin-top: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
         <div class="activity-toggle-bar" role="tablist" aria-label="Coding platform selector">
           <button
             type="button"
@@ -580,6 +668,18 @@ const html = `<!DOCTYPE html>
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
             </svg>
             <span>GITHUB</span>
+          </button>
+        </div>
+
+        <div class="activity-sync-wrap">
+          <span class="activity-sync-indicator" title="Synchronized live with official developer APIs">
+            <span class="sync-dot"></span>
+            LIVE SYNCED
+          </span>
+          <button type="button" class="sync-refresh-btn" id="sync-refresh-btn" title="Refresh live statistics" aria-label="Refresh stats">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
           </button>
         </div>
       </div>
@@ -612,7 +712,7 @@ const html = `<!DOCTYPE html>
                   <p>
                     <span>Global Rank: <strong id="leetcode-global-rank" style="color: var(--text);">#1,623,635</strong></span>
                     <span>·</span>
-                    <span id="leetcode-active-days">60 Active Days</span>
+                    <span id="leetcode-active-days">${lcActiveDays} Active Days</span>
                   </p>
                 </div>
               </div>
@@ -622,7 +722,7 @@ const html = `<!DOCTYPE html>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #ffaa00;" aria-hidden="true">
                     <path d="M12 2c.5 2.5 2 4.5 4 6 2.5 1.9 4 4.8 4 8 0 4.4-3.6 8-8 8s-8-3.6-8-8c0-3.2 1.5-6.1 4-8 .5 1.5 2 3.5 4 4 0-3 2-6 4-10z"/>
                   </svg>
-                  <span id="leetcode-streak-val">49 DAYS STREAK</span>
+                  <span id="leetcode-streak-val">${lcStreak} DAYS STREAK</span>
                 </span>
                 <a href="https://leetcode.com/u/krishna217/" target="_blank" rel="noopener noreferrer" class="nav-pill filled" style="height: 32px; padding: 0 16px; font-size: 11px;">
                   VIEW ON LEETCODE
@@ -637,27 +737,27 @@ const html = `<!DOCTYPE html>
             <div class="leetcode-stats-overview">
               <div class="stat-cell">
                 <span class="stat-cell-label">Problems Solved</span>
-                <span class="stat-cell-val" id="stat-total-solved">105</span>
-                <span class="stat-cell-sub">182 Submissions</span>
+                <span class="stat-cell-val" id="stat-total-solved">${lcTotalSolved}</span>
+                <span class="stat-cell-sub">${lcSubmissions} Submissions</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Easy</span>
-                <span class="stat-cell-val" style="color: #00b8a3;" id="stat-easy-solved">88</span>
-                <span class="stat-cell-sub">83.8% of total</span>
+                <span class="stat-cell-val" style="color: #00b8a3;" id="stat-easy-solved">${lcEasy}</span>
+                <span class="stat-cell-sub">${((lcEasy/lcTotalSolved)*100).toFixed(1)}% of total</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Medium</span>
-                <span class="stat-cell-val" style="color: #ffc01e;" id="stat-med-solved">16</span>
-                <span class="stat-cell-sub">15.2% of total</span>
+                <span class="stat-cell-val" style="color: #ffc01e;" id="stat-med-solved">${lcMed}</span>
+                <span class="stat-cell-sub">${((lcMed/lcTotalSolved)*100).toFixed(1)}% of total</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Hard</span>
-                <span class="stat-cell-val" style="color: #ff375f;" id="stat-hard-solved">1</span>
-                <span class="stat-cell-sub">1.0% of total</span>
+                <span class="stat-cell-val" style="color: #ff375f;" id="stat-hard-solved">${lcHard}</span>
+                <span class="stat-cell-sub">${((lcHard/lcTotalSolved)*100).toFixed(1)}% of total</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Max Streak</span>
-                <span class="stat-cell-val" id="stat-max-streak">49<span style="font-size: 16px; font-weight: normal; margin-left: 2px;">d</span></span>
+                <span class="stat-cell-val" id="stat-max-streak">${lcStreak}<span style="font-size: 16px; font-weight: normal; margin-left: 2px;">d</span></span>
                 <span class="stat-cell-sub">Consistent Daily</span>
               </div>
             </div>
@@ -669,11 +769,11 @@ const html = `<!DOCTYPE html>
             <div class="diff-card reveal">
               <div class="diff-card-header">
                 <span class="diff-name easy">EASY</span>
-                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-easy-ratio">88 / 870</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-easy-ratio">${lcEasy} / 870</span>
               </div>
-              <div class="diff-count-num" id="diff-easy-count">88</div>
+              <div class="diff-count-num" id="diff-easy-count">${lcEasy}</div>
               <div class="diff-bar-track">
-                <div class="diff-bar-fill easy" id="bar-easy" style="width: 10.1%;"></div>
+                <div class="diff-bar-fill easy" id="bar-easy" style="width: ${((lcEasy/870)*100).toFixed(1)}%;"></div>
               </div>
               <span style="font-size: 11px; color: var(--text-muted);">Fundamentals, Strings, Arrays & Sorting</span>
             </div>
@@ -682,11 +782,11 @@ const html = `<!DOCTYPE html>
             <div class="diff-card reveal reveal-delay-1">
               <div class="diff-card-header">
                 <span class="diff-name medium">MEDIUM</span>
-                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-med-ratio">16 / 1827</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-med-ratio">${lcMed} / 1827</span>
               </div>
-              <div class="diff-count-num" id="diff-med-count">16</div>
+              <div class="diff-count-num" id="diff-med-count">${lcMed}</div>
               <div class="diff-bar-track">
-                <div class="diff-bar-fill medium" id="bar-med" style="width: 0.9%;"></div>
+                <div class="diff-bar-fill medium" id="bar-med" style="width: ${((lcMed/1827)*100).toFixed(1)}%;"></div>
               </div>
               <span style="font-size: 11px; color: var(--text-muted);">Hash Tables, Dynamic Programming, Greedy</span>
             </div>
@@ -695,11 +795,11 @@ const html = `<!DOCTYPE html>
             <div class="diff-card reveal reveal-delay-2">
               <div class="diff-card-header">
                 <span class="diff-name hard">HARD</span>
-                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-hard-ratio">1 / 803</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;" id="diff-hard-ratio">${lcHard} / 803</span>
               </div>
-              <div class="diff-count-num" id="diff-hard-count">1</div>
+              <div class="diff-count-num" id="diff-hard-count">${lcHard}</div>
               <div class="diff-bar-track">
-                <div class="diff-bar-fill hard" id="bar-hard" style="width: 0.2%;"></div>
+                <div class="diff-bar-fill hard" id="bar-hard" style="width: ${((lcHard/803)*100).toFixed(1)}%;"></div>
               </div>
               <span style="font-size: 11px; color: var(--text-muted);">Complex Game Theory & Advanced Algos</span>
             </div>
@@ -710,7 +810,7 @@ const html = `<!DOCTYPE html>
             <div class="heatmap-card-header">
               <div class="heatmap-title-group">
                 <h3>SUBMISSION CALENDAR GRAPH</h3>
-                <p><span id="heatmap-total-subs">220</span> submissions in the past months · Monochromatic Theme</p>
+                <p><span id="heatmap-total-subs">${lcSubmissions}</span> submissions in the past months · Live Synced Daily</p>
               </div>
               <div class="heatmap-legend">
                 <span>Less</span>
@@ -726,7 +826,7 @@ const html = `<!DOCTYPE html>
             <!-- Heatmap Matrix Grid -->
             <div class="heatmap-scroll-wrapper">
               <div class="heatmap-grid" id="leetcode-heatmap-grid">
-                <!-- Dynamically populated with accurate SVG/div day cells -->
+                ${lcHeatmapHTML}
               </div>
             </div>
           </div>
@@ -833,22 +933,22 @@ const html = `<!DOCTYPE html>
             <div class="leetcode-stats-overview">
               <div class="stat-cell">
                 <span class="stat-cell-label">Public Repos</span>
-                <span class="stat-cell-val" id="github-repo-count">30</span>
+                <span class="stat-cell-val" id="github-repo-count">${ghPublicRepos}</span>
                 <span class="stat-cell-sub">Open Source</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Contributions</span>
-                <span class="stat-cell-val" style="color: #216e39;" id="github-contrib-count">86</span>
+                <span class="stat-cell-val" style="color: #216e39;" id="github-contrib-count">${ghTotalContribs}</span>
                 <span class="stat-cell-sub">Past Year</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Followers</span>
-                <span class="stat-cell-val" id="github-followers">18</span>
+                <span class="stat-cell-val" id="github-followers">${ghFollowers}</span>
                 <span class="stat-cell-sub">Developers</span>
               </div>
               <div class="stat-cell">
                 <span class="stat-cell-label">Following</span>
-                <span class="stat-cell-val" id="github-following">31</span>
+                <span class="stat-cell-val" id="github-following">${ghFollowing}</span>
                 <span class="stat-cell-sub">Connections</span>
               </div>
               <div class="stat-cell">
@@ -864,7 +964,7 @@ const html = `<!DOCTYPE html>
             <div class="heatmap-card-header">
               <div class="heatmap-title-group">
                 <h3>GITHUB CONTRIBUTION GRAPH</h3>
-                <p><span id="github-total-contribs">86</span> contributions in the last year · Synced from GitHub API</p>
+                <p><span id="github-total-contribs">${ghTotalContribs}</span> contributions in the last year · Synced Live Daily</p>
               </div>
               <div class="heatmap-legend">
                 <span>Less</span>
@@ -880,7 +980,7 @@ const html = `<!DOCTYPE html>
             <!-- Heatmap Matrix Grid for GitHub -->
             <div class="heatmap-scroll-wrapper">
               <div class="heatmap-grid" id="github-heatmap-grid">
-                <!-- Dynamically populated with accurate GitHub contribution cells -->
+                ${ghHeatmapHTML}
               </div>
             </div>
           </div>

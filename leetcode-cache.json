@@ -5,18 +5,18 @@
       "acSubmissionNum": [
         {
           "difficulty": "All",
-          "count": 106,
-          "submissions": 184
+          "count": 113,
+          "submissions": 200
         },
         {
           "difficulty": "Easy",
-          "count": 88,
-          "submissions": 162
+          "count": 91,
+          "submissions": 170
         },
         {
           "difficulty": "Medium",
-          "count": 17,
-          "submissions": 21
+          "count": 21,
+          "submissions": 29
         },
         {
           "difficulty": "Hard",
@@ -26,7 +26,7 @@
       ]
     },
     "profile": {
-      "ranking": 1623635,
+      "ranking": 1551224,
       "reputation": 0,
       "starRating": 1.5,
       "userAvatar": "https://assets.leetcode.com/users/krishna217/avatar_1772532596.png",
@@ -37,9 +37,9 @@
       "activeYears": [
         2026
       ],
-      "streak": 50,
-      "totalActiveDays": 61,
-      "submissionCalendar": "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2, \"1791244800\": 2}"
+      "streak": 53,
+      "totalActiveDays": 64,
+      "submissionCalendar": "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2, \"1791244800\": 5, \"1791331200\": 8, \"1791417600\": 1, \"1791504000\": 5}"
     },
     "badges": [
       {
@@ -66,9 +66,14 @@
           "problemsSolved": 1
         },
         {
+          "tagName": "Union-Find",
+          "tagSlug": "union-find",
+          "problemsSolved": 1
+        },
+        {
           "tagName": "Monotonic Stack",
           "tagSlug": "monotonic-stack",
-          "problemsSolved": 1
+          "problemsSolved": 2
         }
       ],
       "intermediate": [
@@ -85,17 +90,17 @@
         {
           "tagName": "Hash Table",
           "tagSlug": "hash-table",
-          "problemsSolved": 25
+          "problemsSolved": 27
         },
         {
           "tagName": "Greedy",
           "tagSlug": "greedy",
-          "problemsSolved": 8
+          "problemsSolved": 9
         },
         {
           "tagName": "Binary Search",
           "tagSlug": "binary-search",
-          "problemsSolved": 8
+          "problemsSolved": 9
         },
         {
           "tagName": "Depth-First Search",
@@ -132,7 +137,7 @@
         {
           "tagName": "Array",
           "tagSlug": "array",
-          "problemsSolved": 63
+          "problemsSolved": 66
         },
         {
           "tagName": "Matrix",
@@ -142,12 +147,12 @@
         {
           "tagName": "String",
           "tagSlug": "string",
-          "problemsSolved": 21
+          "problemsSolved": 24
         },
         {
           "tagName": "Simulation",
           "tagSlug": "simulation",
-          "problemsSolved": 9
+          "problemsSolved": 10
         },
         {
           "tagName": "Enumeration",
@@ -162,7 +167,7 @@
         {
           "tagName": "Stack",
           "tagSlug": "stack",
-          "problemsSolved": 5
+          "problemsSolved": 9
         },
         {
           "tagName": "Linked List",
@@ -179,64 +184,64 @@
   },
   "recentAcSubmissionList": [
     {
-      "id": "2164327271",
-      "title": "Score of Parentheses",
-      "titleSlug": "score-of-parentheses",
-      "timestamp": "1791296915"
+      "id": "2167624981",
+      "title": "Longest Consecutive Sequence",
+      "titleSlug": "longest-consecutive-sequence",
+      "timestamp": "1791573577"
     },
     {
-      "id": "2162683154",
-      "title": "Remove Duplicates from Sorted Array",
-      "titleSlug": "remove-duplicates-from-sorted-array",
-      "timestamp": "1791173118"
+      "id": "2167518925",
+      "title": "Build an Array With Stack Operations",
+      "titleSlug": "build-an-array-with-stack-operations",
+      "timestamp": "1791566442"
     },
     {
-      "id": "2162315780",
-      "title": "House Robber",
-      "titleSlug": "house-robber",
-      "timestamp": "1791131914"
+      "id": "2166509122",
+      "title": "Remove Outermost Parentheses",
+      "titleSlug": "remove-outermost-parentheses",
+      "timestamp": "1791476126"
     },
     {
-      "id": "2162268006",
-      "title": "Detect Capital",
-      "titleSlug": "detect-capital",
-      "timestamp": "1791129089"
+      "id": "2165457932",
+      "title": "Intersection of Two Arrays",
+      "titleSlug": "intersection-of-two-arrays",
+      "timestamp": "1791388150"
     },
     {
-      "id": "2162260855",
-      "title": "Reverse Integer",
-      "titleSlug": "reverse-integer",
-      "timestamp": "1791128625"
+      "id": "2165202607",
+      "title": "First Bad Version",
+      "titleSlug": "first-bad-version",
+      "timestamp": "1791370775"
     },
     {
-      "id": "2162194351",
-      "title": "Max Consecutive Ones",
-      "titleSlug": "max-consecutive-ones",
-      "timestamp": "1791124247"
+      "id": "2165178466",
+      "title": "Word Pattern",
+      "titleSlug": "word-pattern",
+      "timestamp": "1791368824"
     },
     {
-      "id": "2162191098",
-      "title": "Set Mismatch",
-      "titleSlug": "set-mismatch",
-      "timestamp": "1791124046"
+      "id": "2164941480",
+      "title": "Daily Temperatures",
+      "titleSlug": "daily-temperatures",
+      "timestamp": "1791351156"
     },
     {
-      "id": "2161883612",
-      "title": "Shuffle the Array",
-      "titleSlug": "shuffle-the-array",
-      "timestamp": "1791100806"
+      "id": "2164555262",
+      "title": "Contains Duplicate",
+      "titleSlug": "contains-duplicate",
+      "timestamp": "1791308705"
     },
     {
-      "id": "2161176026",
-      "title": "Find the Difference of Two Arrays",
-      "titleSlug": "find-the-difference-of-two-arrays",
-      "timestamp": "1791039164"
+      "id": "2164551833",
+      "title": "How Many Numbers Are Smaller Than the Current Number",
+      "titleSlug": "how-many-numbers-are-smaller-than-the-current-number",
+      "timestamp": "1791308543"
     },
     {
-      "id": "2159892192",
-      "title": "Linked List Cycle",
-      "titleSlug": "linked-list-cycle",
-      "timestamp": "1790924721"
+      "id": "2164367037",
+      "title": "Minimum Add to Make Parentheses Valid",
+      "titleSlug": "minimum-add-to-make-parentheses-valid",
+      "timestamp": "1791299257"
     }
   ]
 }

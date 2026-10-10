@@ -3381,6 +3381,79 @@ body.no-scroll {
   background: #0a0a0a;
 }
 
+/* ── Live Auto-Sync Status & Refresh Control ── */
+.activity-sync-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-sync-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.09);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 4px 10px;
+  border-radius: 999px;
+  user-select: none;
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulseSyncDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseSyncDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+.sync-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.sync-refresh-btn:hover {
+  color: #0a0a0a;
+  border-color: #0a0a0a;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sync-refresh-btn.spinning svg {
+  animation: spinRefresh 0.8s linear infinite;
+}
+
+@keyframes spinRefresh {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.heatmap-day.today-cell {
+  position: relative;
+  outline: 1.5px solid #0a0a0a;
+  outline-offset: 1px;
+}
+
 
 
 

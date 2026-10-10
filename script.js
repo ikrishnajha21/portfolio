@@ -1521,28 +1521,69 @@ function animateLeetCodeSection() {
     );
   }
 
-  // Initialize interactive platform toggle between LeetCode & GitHub
+  // Initialize interactive platform toggle between LeetCode & GitHub and refresh control
   initActivityPlatformToggle();
 
-  // Fetch live stats from /api/leetcode or fallback to rendered data
+  // Fetch live stats immediately on page load for BOTH platforms
   fetchLeetCodeData();
+  fetchGitHubData();
 }
 
-function fetchLeetCodeData() {
-  fetch('/api/leetcode')
+function getHeatmapGridDates(totalWeeks = 24) {
+  const today = new Date();
+  const currentDayOfWeek = today.getDay(); // 0 = Sun, 6 = Sat
+  
+  // End on Saturday of the current week so today is guaranteed in the rightmost column
+  const endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() + (6 - currentDayOfWeek));
+  endOfWeek.setHours(23, 59, 59, 999);
+  
+  const totalDays = totalWeeks * 7;
+  const startDate = new Date(endOfWeek);
+  startDate.setDate(endOfWeek.getDate() - totalDays + 1);
+  startDate.setHours(0, 0, 0, 0);
+
+  return { startDate, today, totalWeeks };
+}
+
+function formatDateYMD(d) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function fetchLeetCodeData(isManual = false) {
+  const refreshBtn = document.getElementById('sync-refresh-btn');
+  if (isManual && refreshBtn) refreshBtn.classList.add('spinning');
+
+  const endpoint = isManual ? '/api/leetcode?fresh=1' : '/api/leetcode';
+  
+  fetch(endpoint)
     .then(res => {
-      if (!res.ok) throw new Error('Network error fetching LeetCode stats');
+      if (!res.ok) throw new Error('API route returned status ' + res.status);
       return res.json();
+    })
+    .catch(() => {
+      // Fallback: load static leetcode-cache.json (e.g. static hosting or GitHub Pages)
+      return fetch('/leetcode-cache.json').then(r => r.json());
     })
     .then(data => {
       if (data && data.matchedUser) {
         updateLeetCodeUI(data);
+        if (isManual && typeof showToast === 'function') {
+          showToast('✓ LeetCode statistics refreshed to latest daily live data!');
+        }
+      } else {
+        renderDefaultHeatmap();
       }
     })
     .catch(err => {
-      console.warn('Using cached LeetCode data:', err);
-      // Fallback: render heatmap from default data
+      console.warn('Using fallback LeetCode data:', err);
       renderDefaultHeatmap();
+    })
+    .finally(() => {
+      if (isManual && refreshBtn) refreshBtn.classList.remove('spinning');
     });
 }
 
@@ -1612,6 +1653,13 @@ function updateLeetCodeUI(data) {
       const diffHardCount = document.getElementById('diff-hard-count');
       if (diffHardCount) diffHardCount.textContent = hardSolved;
 
+      const diffEasyRatio = document.getElementById('diff-easy-ratio');
+      if (diffEasyRatio) diffEasyRatio.textContent = `${easySolved} / 870`;
+      const diffMedRatio = document.getElementById('diff-med-ratio');
+      if (diffMedRatio) diffMedRatio.textContent = `${medSolved} / 1827`;
+      const diffHardRatio = document.getElementById('diff-hard-ratio');
+      if (diffHardRatio) diffHardRatio.textContent = `${hardSolved} / 803`;
+
       const barEasy = document.getElementById('bar-easy');
       if (barEasy) barEasy.style.width = `${Math.min(100, (easySolved / 870) * 100)}%`;
       const barMed = document.getElementById('bar-med');
@@ -1653,7 +1701,23 @@ function renderLeetCodeHeatmap(submissionCalendarRaw) {
     submissionMap = submissionCalendarRaw;
   }
 
-  // Create tooltip
+  // Build lookup mapping by YYYY-MM-DD
+  const dateMap = {};
+  let totalSubCount = 0;
+  for (const ts in submissionMap) {
+    const val = Number(submissionMap[ts]) || 0;
+    totalSubCount += val;
+    const d = new Date(Number(ts) * 1000);
+    const ymd = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+    dateMap[ymd] = (dateMap[ymd] || 0) + val;
+  }
+
+  const totalSubsEl = document.getElementById('heatmap-total-subs');
+  if (totalSubsEl && totalSubCount > 0) {
+    totalSubsEl.textContent = totalSubCount;
+  }
+
+  // Create or retrieve tooltip
   let tooltip = document.getElementById('heatmap-tooltip');
   if (!tooltip) {
     tooltip = document.createElement('div');
@@ -1662,26 +1726,8 @@ function renderLeetCodeHeatmap(submissionCalendarRaw) {
     document.body.appendChild(tooltip);
   }
 
-  // Calculate past 24 weeks (~168 days) ending on today
-  const today = new Date();
-  const totalWeeks = 24;
-  const daysToShow = totalWeeks * 7;
-
-  // Compute total submissions
-  let totalSubCount = 0;
-  for (const ts in submissionMap) {
-    totalSubCount += Number(submissionMap[ts]);
-  }
-  const totalSubsEl = document.getElementById('heatmap-total-subs');
-  if (totalSubsEl && totalSubCount > 0) {
-    totalSubsEl.textContent = totalSubCount;
-  }
-
-  // Build grid by columns (weeks)
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - daysToShow + 1);
-  startDate.setDate(startDate.getDate() - startDate.getDay());
-
+  const { startDate, today, totalWeeks } = getHeatmapGridDates(24);
+  const todayYMD = formatDateYMD(today);
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let currentCursor = new Date(startDate);
 
@@ -1693,10 +1739,15 @@ function renderLeetCodeHeatmap(submissionCalendarRaw) {
       const dayCell = document.createElement('div');
       dayCell.className = 'heatmap-day';
 
-      const dayUTC = Date.UTC(currentCursor.getFullYear(), currentCursor.getMonth(), currentCursor.getDate()) / 1000;
-      const count = submissionMap[dayUTC] || submissionMap[dayUTC.toString()] || 0;
+      const cellYMD = formatDateYMD(currentCursor);
+      const isToday = cellYMD === todayYMD;
+      if (isToday) {
+        dayCell.classList.add('today-cell');
+      }
 
-      let cellBg = '#e8eaed';
+      const count = dateMap[cellYMD] || 0;
+
+      let cellBg = '#ebedf0';
       if (count >= 10) {
         cellBg = '#216e39';
       } else if (count >= 6) {
@@ -1710,8 +1761,8 @@ function renderLeetCodeHeatmap(submissionCalendarRaw) {
       dayCell.style.backgroundColor = cellBg;
       const formattedDate = `${months[currentCursor.getMonth()]} ${currentCursor.getDate()}, ${currentCursor.getFullYear()}`;
       const tooltipText = count > 0 
-        ? `${count} submission${count > 1 ? 's' : ''} on ${formattedDate}`
-        : `No submissions on ${formattedDate}`;
+        ? `${count} submission${count > 1 ? 's' : ''} on ${formattedDate}${isToday ? ' (Today)' : ''}`
+        : `No submissions on ${formattedDate}${isToday ? ' (Today)' : ''}`;
 
       dayCell.addEventListener('mouseenter', () => {
         tooltip.textContent = tooltipText;
@@ -1734,7 +1785,7 @@ function renderLeetCodeHeatmap(submissionCalendarRaw) {
 }
 
 function renderDefaultHeatmap() {
-  const fallbackCalendar = "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2}";
+  const fallbackCalendar = "{\"1784937600\": 6, \"1785024000\": 1, \"1785110400\": 1, \"1785196800\": 1, \"1785283200\": 4, \"1785369600\": 2, \"1785456000\": 1, \"1785542400\": 2, \"1785628800\": 1, \"1785715200\": 3, \"1785888000\": 3, \"1787011200\": 1, \"1787097600\": 1, \"1787184000\": 3, \"1787270400\": 2, \"1787356800\": 3, \"1787443200\": 1, \"1787529600\": 2, \"1787616000\": 1, \"1787702400\": 1, \"1787788800\": 1, \"1787875200\": 1, \"1787961600\": 1, \"1788048000\": 3, \"1788134400\": 1, \"1788220800\": 3, \"1788307200\": 4, \"1788393600\": 2, \"1788480000\": 2, \"1788566400\": 3, \"1788652800\": 3, \"1788739200\": 1, \"1788825600\": 5, \"1788912000\": 6, \"1788998400\": 3, \"1789084800\": 1, \"1789171200\": 1, \"1789257600\": 4, \"1789344000\": 5, \"1789430400\": 3, \"1789516800\": 9, \"1789603200\": 4, \"1789689600\": 8, \"1789776000\": 7, \"1789862400\": 8, \"1789948800\": 4, \"1790035200\": 11, \"1790121600\": 5, \"1790208000\": 11, \"1790294400\": 5, \"1790380800\": 7, \"1790467200\": 11, \"1790553600\": 3, \"1790640000\": 6, \"1790726400\": 8, \"1790812800\": 2, \"1790899200\": 1, \"1790985600\": 2, \"1791072000\": 13, \"1791158400\": 2, \"1791244800\": 5, \"1791331200\": 8, \"1791417600\": 1, \"1791504000\": 5}";
   renderLeetCodeHeatmap(fallbackCalendar);
 }
 
@@ -1780,6 +1831,7 @@ function initActivityPlatformToggle() {
   const panelLeetcode = document.getElementById('panel-leetcode');
   const panelGithub = document.getElementById('panel-github');
   const titleWord = document.getElementById('activity-title-word');
+  const refreshBtn = document.getElementById('sync-refresh-btn');
 
   if (!tabLeetcode || !tabGithub) return;
 
@@ -1802,9 +1854,6 @@ function initActivityPlatformToggle() {
       if (panelGithub) panelGithub.classList.add('active');
       if (panelLeetcode) panelLeetcode.classList.remove('active');
       if (titleWord) titleWord.textContent = 'REPOSITORIES';
-
-      // Load GitHub data if not yet fetched
-      fetchGitHubData();
     }
 
     if (typeof ScrollTrigger !== 'undefined') {
@@ -1814,24 +1863,69 @@ function initActivityPlatformToggle() {
 
   tabLeetcode.addEventListener('click', () => switchTab('leetcode'));
   tabGithub.addEventListener('click', () => switchTab('github'));
+
+  // Sync refresh button
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      fetchLeetCodeData(true);
+      fetchGitHubData(true);
+    });
+  }
 }
 
-let githubDataFetched = false;
-function fetchGitHubData() {
-  if (githubDataFetched) return;
-  fetch('/api/github')
+function fetchGitHubData(isManual = false) {
+  const refreshBtn = document.getElementById('sync-refresh-btn');
+  if (isManual && refreshBtn) refreshBtn.classList.add('spinning');
+
+  const endpoint = isManual ? '/api/github?fresh=1' : '/api/github';
+  
+  fetch(endpoint)
     .then(res => {
       if (!res.ok) throw new Error('Network error fetching GitHub stats');
       return res.json();
     })
+    .catch(() => {
+      // Direct client-side fetch from public GitHub APIs (works on static hosting & GitHub Pages)
+      return Promise.allSettled([
+        fetch('https://api.github.com/users/ikrishnajha21').then(r => r.json()),
+        fetch('https://github-contributions-api.jogruber.de/v4/ikrishnajha21?y=last').then(r => r.json()),
+        fetch('/github-cache.json').then(r => r.json())
+      ]).then(results => {
+        const userRes = results[0].status === 'fulfilled' ? results[0].value : null;
+        const contribsRes = results[1].status === 'fulfilled' ? results[1].value : null;
+        const cacheRes = results[2].status === 'fulfilled' ? results[2].value : {};
+
+        const validUser = (userRes && userRes.login && !userRes.message) ? userRes : (cacheRes.user || {});
+        const totalContribs = contribsRes && contribsRes.total 
+          ? (contribsRes.total[new Date().getFullYear()] || contribsRes.total['lastYear'] || 115) 
+          : (cacheRes.totalContributions || 115);
+        const contributions = contribsRes && Array.isArray(contribsRes.contributions) 
+          ? contribsRes.contributions 
+          : (cacheRes.contributions || []);
+
+        return {
+          user: validUser,
+          repos: cacheRes.repos || [],
+          totalContributions: totalContribs,
+          contributions: contributions
+        };
+      });
+    })
     .then(data => {
-      if (data && data.user) {
-        githubDataFetched = true;
+      if (data && (data.user || data.contributions)) {
         updateGitHubUI(data);
+        if (isManual && typeof showToast === 'function') {
+          showToast('✓ GitHub contributions refreshed to latest daily live data!');
+        }
       }
     })
     .catch(err => {
-      console.warn('Error fetching GitHub live data:', err);
+      console.warn('Error updating GitHub live data:', err);
+      // Final fallback to cached file
+      fetch('/github-cache.json').then(r => r.json()).then(updateGitHubUI).catch(() => {});
+    })
+    .finally(() => {
+      if (isManual && refreshBtn) refreshBtn.classList.remove('spinning');
     });
 }
 
@@ -1840,7 +1934,7 @@ function updateGitHubUI(data) {
     const user = data.user || {};
     const repos = data.repos || [];
     const contribs = data.contributions || [];
-    const totalContribs = data.totalContributions || 86;
+    const totalContribs = data.totalContributions || (contribs.length > 0 ? contribs.reduce((a, b) => a + (b.count || 0), 0) : 115);
 
     // Avatar
     if (user.avatar_url) {
@@ -1919,44 +2013,53 @@ function renderGitHubHeatmap(contribs) {
     document.body.appendChild(tooltip);
   }
 
-  // Group contributions by weeks (each column 7 days)
-  // Take last 24 weeks (~168 days)
-  const sliced = contribs.slice(-168);
-  const totalWeeks = Math.ceil(sliced.length / 7);
+  // Build lookup mapping by YYYY-MM-DD
+  const dateMap = {};
+  contribs.forEach(c => {
+    if (c && c.date) {
+      dateMap[c.date] = c;
+    }
+  });
 
+  const { startDate, today, totalWeeks } = getHeatmapGridDates(24);
+  const todayYMD = formatDateYMD(today);
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let currentCursor = new Date(startDate);
 
   for (let w = 0; w < totalWeeks; w++) {
     const weekCol = document.createElement('div');
     weekCol.className = 'heatmap-week';
 
     for (let d = 0; d < 7; d++) {
-      const itemIndex = w * 7 + d;
-      if (itemIndex >= sliced.length) break;
-      const item = sliced[itemIndex];
-
       const dayCell = document.createElement('div');
       dayCell.className = 'heatmap-day';
 
-      const count = item.count || 0;
+      const cellYMD = formatDateYMD(currentCursor);
+      const isToday = cellYMD === todayYMD;
+      if (isToday) {
+        dayCell.classList.add('today-cell');
+      }
+
+      const item = dateMap[cellYMD];
+      const count = item ? (item.count || 0) : 0;
+      const level = item ? (item.level || 0) : 0;
+
       let cellBg = '#ebedf0';
-      if (count >= 10 || item.level >= 4) {
+      if (count >= 10 || level >= 4) {
         cellBg = '#216e39';
-      } else if (count >= 6 || item.level === 3) {
+      } else if (count >= 6 || level === 3) {
         cellBg = '#30a14e';
-      } else if (count >= 3 || item.level === 2) {
+      } else if (count >= 3 || level === 2) {
         cellBg = '#40c463';
-      } else if (count >= 1 || item.level === 1) {
+      } else if (count >= 1 || level === 1) {
         cellBg = '#9be9a8';
       }
 
       dayCell.style.backgroundColor = cellBg;
-      
-      const dateObj = new Date(item.date);
-      const formattedDate = `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
+      const formattedDate = `${months[currentCursor.getMonth()]} ${currentCursor.getDate()}, ${currentCursor.getFullYear()}`;
       const tooltipText = count > 0 
-        ? `${count} contribution${count > 1 ? 's' : ''} on ${formattedDate}`
-        : `No contributions on ${formattedDate}`;
+        ? `${count} contribution${count > 1 ? 's' : ''} on ${formattedDate}${isToday ? ' (Today)' : ''}`
+        : `No contributions on ${formattedDate}${isToday ? ' (Today)' : ''}`;
 
       dayCell.addEventListener('mouseenter', () => {
         tooltip.textContent = tooltipText;
@@ -1971,6 +2074,7 @@ function renderGitHubHeatmap(contribs) {
       });
 
       weekCol.appendChild(dayCell);
+      currentCursor.setDate(currentCursor.getDate() + 1);
     }
 
     gridContainer.appendChild(weekCol);
