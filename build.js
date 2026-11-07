@@ -108,7 +108,7 @@ const html = `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3.0">
   
   <style>
     /* ── Seamless Multi-Section Scroll Flow Structure ── */
@@ -515,8 +515,30 @@ const html = `<!DOCTYPE html>
           </div>
         </article>
 
-        <article class="project-item reveal reveal-delay-2" data-cat="fullstack frontend" id="proj-7" onclick="window.open('https://remix-india-climate-digital-twin-422592704561.asia-east1.run.app', '_blank');">
+        <article class="project-item reveal reveal-delay-2" data-cat="fullstack frontend" id="proj-4" onclick="window.open('https://dsaly.netlify.app/', '_blank');">
           <span class="proj-num">03</span>
+          <div class="proj-main">
+            <h2 class="proj-name">DSALY</h2>
+            <p class="proj-cat">LeetCode Replica · DSA Practice Platform · React</p>
+            <p class="proj-desc" style="font-size: 14px; margin-top: 8px; color: var(--text-muted); max-width: 550px; line-height: 1.5;">DSALY — Interactive LeetCode Replica & Algorithm Practice Platform. A comprehensive DSA learning environment featuring topic-wise problem curation, real-time code execution with automated test runners, interactive problem solvers, and submission streak analytics.</p>
+          </div>
+          <div class="proj-right">
+            <div class="proj-tags">
+              <span>LeetCode Replica</span>
+              <span>DSA Platform</span>
+              <span>React</span>
+              <span>Code Editor</span>
+            </div>
+            <span class="proj-arrow">
+              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </div>
+        </article>
+
+        <article class="project-item reveal reveal-delay-3" data-cat="fullstack frontend" id="proj-7" onclick="window.open('https://remix-india-climate-digital-twin-422592704561.asia-east1.run.app', '_blank');">
+          <span class="proj-num">04</span>
           <div class="proj-main">
             <h2 class="proj-name">INDIA CLIMATE DIGITAL TWIN</h2>
             <p class="proj-cat">Climate Digital Twin · React · Satellite Data</p>
@@ -527,27 +549,6 @@ const html = `<!DOCTYPE html>
               <span>React</span>
               <span>Satellite Data</span>
               <span>AI Models</span>
-            </div>
-            <span class="proj-arrow">
-              <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
-                <path class="arrow-path" d="M 6 18 L 18 6 M 10 6 L 18 6 L 18 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
-          </div>
-        </article>
-
-        <article class="project-item reveal reveal-delay-3" data-cat="frontend motion" id="proj-4" onclick="window.open('https://thechopracase.ai.studio/', '_blank');">
-          <span class="proj-num">04</span>
-          <div class="proj-main">
-            <h2 class="proj-name">THE CHOPRA CASE</h2>
-            <p class="proj-cat">Interactive Scrollytelling · GSAP · Canvas</p>
-            <p class="proj-desc" style="font-size: 14px; margin-top: 8px; color: var(--text-muted); max-width: 550px; line-height: 1.5;">THE CHOPRA CASE — Interactive Scrollytelling Investigation. An immersive, high-fidelity scrollytelling visual feature that reconstructs and investigates the infamous 1978 Geeta and Sanjay Chopra kidnapping and homicide case in New Delhi, India.</p>
-          </div>
-          <div class="proj-right">
-            <div class="proj-tags">
-              <span>GSAP</span>
-              <span>Canvas</span>
-              <span>Scrollytelling</span>
             </div>
             <span class="proj-arrow">
               <svg class="morph-arrow-svg" viewBox="0 0 24 24" width="24" height="24">
@@ -1546,7 +1547,7 @@ const html = `<!DOCTYPE html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-<script src="script.js"></script>
+<script src="script.js?v=3.0"></script>
 
 </body>
 </html>`;

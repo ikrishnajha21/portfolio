@@ -53,7 +53,8 @@ const criticalAssets = [
   'assets/images/brand-banner.png',
   'assets/images/arogya-flow-featured.jpg',
   'assets/images/project-darkyn-featured.jpg',
-  'assets/images/safeyatra-featured.jpg'
+  'assets/images/safeyatra-featured.jpg',
+  'assets/images/dsaly-featured.jpg'
 ];
 
 criticalAssets.forEach(a => {
